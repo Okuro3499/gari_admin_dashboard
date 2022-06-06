@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { BallTriangle } from "react-loader-spinner";
 
 function Vehicles() {
   const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  // const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
@@ -10,12 +12,14 @@ function Vehicles() {
       .then((response) => response.json())
       .then(
         (data) => {
-          setIsLoaded(true);
+          // setIsLoaded(true);
+          setLoading(false);
           setCars(data.cars);
           console.log(data.cars);
         },
         (error) => {
-          setIsLoaded(true);
+          // setIsLoaded(true);
+          setLoading(false);
           setError(error);
         }
       );
@@ -23,8 +27,8 @@ function Vehicles() {
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
-    return <div>Loading...</div>;
+  // } else if (!isLoaded) {
+  //   return <div>Loading...</div>;
   } else {
     return (
       <div className="flex overflow-hidden bg-white pt-16">
@@ -32,6 +36,13 @@ function Vehicles() {
           className="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
           id="sidebarBackdrop"
         ></div>
+        {loading ? (
+          <div className="h-full w-full relative overflow-y-auto lg:ml-64">
+            <div className="grid place-items-center h-screen -mt-14">
+              <BallTriangle height="80" width="80" color="cyan" ariaLabel="loading" />
+            </div>
+          </div>
+        ) : (
         <div
           id="main-content"
           className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64"
@@ -696,6 +707,7 @@ function Vehicles() {
             </div>
           </main>
         </div>
+        )}
       </div>
     );
   }

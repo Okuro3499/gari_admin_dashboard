@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { BallTriangle } from "react-loader-spinner";
 
 function Users() {
   const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  // const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
@@ -10,12 +12,12 @@ function Users() {
       .then((response) => response.json())
       .then(
         (data) => {
-          setIsLoaded(true);
+          setLoading(false);
           setClients(data.clients);
           console.log(data.clients);
         },
         (error) => {
-          setIsLoaded(true);
+          setLoading(false);
           setError(error);
         }
       );
@@ -23,8 +25,6 @@ function Users() {
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
-    return <div>Loading...</div>;
   } else {
     return (
       <div className="flex overflow-hidden bg-white pt-16">
@@ -32,41 +32,48 @@ function Users() {
           className="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
           id="sidebarBackdrop"
         ></div>
+        {loading ? (
+          <div className="h-full w-full relative overflow-y-auto lg:ml-64">
+            <div className="grid place-items-center h-screen -mt-14">
+              <BallTriangle height="80" width="80" color="cyan" ariaLabel="loading" />
+            </div>
+          </div>
+        ) : (
         <div
           id="main-content"
           className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64"
         >
           <main>
-            <div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
-              <div class="mb-1 w-full">
-                <div class="mb-4">
-                  <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">
+            <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
+              <div className="mb-1 w-full">
+                <div className="mb-4">
+                  <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
                     All users
                   </h1>
                 </div>
-                <div class="sm:flex">
-                  <div class="hidden sm:flex items-center sm:divide-x sm:divide-gray-100 mb-3 sm:mb-0">
-                    <form class="lg:pr-3" action="#" method="GET">
-                      <label for="users-search" class="sr-only">
+                <div className="sm:flex">
+                  <div className="hidden sm:flex items-center sm:divide-x sm:divide-gray-100 mb-3 sm:mb-0">
+                    <form className="lg:pr-3" action="#" method="GET">
+                      <label htmlFor="users-search" className="sr-only">
                         Search
                       </label>
-                      <div class="mt-1 relative lg:w-64 xl:w-96">
+                      <div className="mt-1 relative lg:w-64 xl:w-96">
                         <input
                           type="text"
                           name="email"
                           id="users-search"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                           placeholder="Search for users"
                         />
                       </div>
                     </form>
-                    <div class="flex space-x-1 pl-0 sm:pl-2 mt-3 sm:mt-0">
+                    <div className="flex space-x-1 pl-0 sm:pl-2 mt-3 sm:mt-0">
                       <a
                         href="/"
-                        class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
+                        className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
                       >
                         <svg
-                          class="w-6 h-6"
+                          className="w-6 h-6"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
@@ -80,10 +87,10 @@ function Users() {
                       </a>
                       <a
                         href="/"
-                        class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
+                        className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
                       >
                         <svg
-                          class="w-6 h-6"
+                          className="w-6 h-6"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
@@ -97,10 +104,10 @@ function Users() {
                       </a>
                       <a
                         href="/"
-                        class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
+                        className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
                       >
                         <svg
-                          class="w-6 h-6"
+                          className="w-6 h-6"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
@@ -114,10 +121,10 @@ function Users() {
                       </a>
                       <a
                         href="/"
-                        class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
+                        className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
                       >
                         <svg
-                          class="w-6 h-6"
+                          className="w-6 h-6"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                           xmlns="http://www.w3.org/2000/svg"
@@ -127,14 +134,14 @@ function Users() {
                       </a>
                     </div>
                   </div>
-                  <div class="flex items-center space-x-2 sm:space-x-3 ml-auto">
-                    <button
+                  <div className="flex items-center space-x-2 sm:space-x-3 ml-auto">
+                    {/* <button
                       type="button"
                       data-modal-toggle="add-user-modal"
-                      class="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                      className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                     >
                       <svg
-                        class="-ml-1 mr-2 h-6 w-6"
+                        className="-ml-1 mr-2 h-6 w-6"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -146,13 +153,13 @@ function Users() {
                         ></path>
                       </svg>
                       Add user
-                    </button>
+                    </button> */}
                     <a
                       href="/"
-                      class="w-1/2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                      className="w-1/2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                     >
                       <svg
-                        class="-ml-1 mr-2 h-6 w-6"
+                        className="-ml-1 mr-2 h-6 w-6"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -169,104 +176,104 @@ function Users() {
                 </div>
               </div>
             </div>
-            <div class="flex flex-col">
-              <div class="overflow-x-auto">
-                <div class="align-middle inline-block min-w-full">
-                  <div class="shadow overflow-hidden">
-                    <table class="table-fixed min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-100">
+            <div className="flex flex-col">
+              <div className="overflow-x-auto">
+                <div className="align-middle inline-block min-w-full">
+                  <div className="shadow overflow-hidden">
+                    <table className="table-fixed min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-100">
                         <tr>
-                          <th scope="col" class="p-4">
-                            <div class="flex items-center">
+                          <th scope="col" className="p-4">
+                            <div className="flex items-center">
                               <input
                                 id="checkbox-all"
                                 aria-describedby="checkbox-1"
                                 type="checkbox"
-                                class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+                                className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
                               />
-                              <label for="checkbox-all" class="sr-only">
+                              <label htmlFor="checkbox-all" className="sr-only">
                                 checkbox
                               </label>
                             </div>
                           </th>
                           <th
                             scope="col"
-                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase"
+                            className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                           >
                             Name
                           </th>
                           <th
                             scope="col"
-                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase"
+                            className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                           >
                             Phone Number
                           </th>
                           <th
                             scope="col"
-                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase"
+                            className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                           >
                             District
                           </th>
                           <th
                             scope="col"
-                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase"
+                            className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
                           >
                             Status
                           </th>
-                          <th scope="col" class="p-4"></th>
+                          <th scope="col" className="p-4"></th>
                         </tr>
                       </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
+                      <tbody className="bg-white divide-y divide-gray-200">
                         {clients.map((client) => (
-                          <tr class="hover:bg-gray-100">
-                            <td class="p-4 w-4">
-                              <div class="flex items-center">
+                          <tr className="hover:bg-gray-100">
+                            <td className="p-4 w-4">
+                              <div className="flex items-center">
                                 <input
                                   id="checkbox-1"
                                   aria-describedby="checkbox-1"
                                   type="checkbox"
-                                  class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+                                  className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
                                 />
-                                <label for="checkbox-1" class="sr-only">
+                                <label htmlFor="checkbox-1" className="sr-only">
                                   checkbox
                                 </label>
                               </div>
                             </td>
-                            <td class="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                            <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
                               <img
-                                class="h-10 w-10 rounded-full"
+                                className="h-10 w-10 rounded-full"
                                 src="https://demo.themesberg.com/windster/images/users/neil-sims.png"
                                 alt="Neil Sims avatar"
                               />
-                              <div class="text-sm font-normal text-gray-500">
-                                <div class="text-base font-semibold text-gray-900">
+                              <div className="text-sm font-normal text-gray-500">
+                                <div className="text-base font-semibold text-gray-900">
                                   {client.first_name + " " + client.last_name}
                                 </div>
-                                <div class="text-sm font-normal text-gray-500">
+                                <div className="text-sm font-normal text-gray-500">
                                   {client.email}
                                 </div>
                               </div>
                             </td>
-                            <td class="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                            <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
                               {"+254" + client.mobile}
                             </td>
-                            <td class="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                            <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
                               {client.district}
                             </td>
-                            <td class="p-4 whitespace-nowrap text-base font-normal text-gray-900">
-                              <div class="flex items-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
+                            <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
+                              <div className="flex items-center">
+                                <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>
                                 Active
                               </div>
                             </td>
-                            <td class="p-4 whitespace-nowrap space-x-2">
+                            <td className="p-4 whitespace-nowrap space-x-2">
                               <button
                                 type="button"
                                 data-modal-toggle="user-modal"
-                                class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
+                                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                               >
                                 <svg
-                                  class="mr-2 h-5 w-5"
+                                  className="mr-2 h-5 w-5"
                                   fill="currentColor"
                                   viewBox="0 0 20 20"
                                   xmlns="http://www.w3.org/2000/svg"
@@ -283,10 +290,10 @@ function Users() {
                               <button
                                 type="button"
                                 data-modal-toggle="delete-user-modal"
-                                class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
+                                className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                               >
                                 <svg
-                                  class="mr-2 h-5 w-5"
+                                  className="mr-2 h-5 w-5"
                                   fill="currentColor"
                                   viewBox="0 0 20 20"
                                   xmlns="http://www.w3.org/2000/svg"
@@ -308,14 +315,14 @@ function Users() {
                 </div>
               </div>
             </div>
-            <div class="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
-              <div class="flex items-center mb-4 sm:mb-0">
+            <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
+              <div className="flex items-center mb-4 sm:mb-0">
                 <a
                   href="/"
-                  class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
+                  className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center"
                 >
                   <svg
-                    class="w-7 h-7"
+                    className="w-7 h-7"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -329,10 +336,10 @@ function Users() {
                 </a>
                 <a
                   href="/"
-                  class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2"
+                  className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2"
                 >
                   <svg
-                    class="w-7 h-7"
+                    className="w-7 h-7"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -344,18 +351,19 @@ function Users() {
                     ></path>
                   </svg>
                 </a>
-                <span class="text-sm font-normal text-gray-500">
-                  Showing <span class="text-gray-900 font-semibold">1-20</span> of{" "}
-                  <span class="text-gray-900 font-semibold">2290</span>
+                <span className="text-sm font-normal text-gray-500">
+                  Showing{" "}
+                  <span className="text-gray-900 font-semibold">1-20</span> of{" "}
+                  <span className="text-gray-900 font-semibold">2290</span>
                 </span>
               </div>
-              <div class="flex items-center space-x-3">
+              <div className="flex items-center space-x-3">
                 <a
                   href="/"
-                  class="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center"
+                  className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center"
                 >
                   <svg
-                    class="-ml-1 mr-1 h-5 w-5"
+                    className="-ml-1 mr-1 h-5 w-5"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -370,11 +378,11 @@ function Users() {
                 </a>
                 <a
                   href="/"
-                  class="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center"
+                  className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center"
                 >
                   Next
                   <svg
-                    class="-mr-1 ml-1 h-5 w-5"
+                    className="-mr-1 ml-1 h-5 w-5"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -388,23 +396,23 @@ function Users() {
                 </a>
               </div>
             </div>
-  
+
             <div
-              class="hidden overflow-x-hidden overflow-y-auto fixed top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center h-modal sm:h-full"
+              className="hidden overflow-x-hidden overflow-y-auto fixed top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center h-modal sm:h-full"
               id="user-modal"
               aria-hidden="true"
             >
-              <div class="relative w-full max-w-2xl px-4 h-full md:h-auto">
-                <div class="bg-white rounded-lg shadow relative">
-                  <div class="flex items-start justify-between p-5 border-b rounded-t">
-                    <h3 class="text-xl font-semibold">Edit user</h3>
+              <div className="relative w-full max-w-2xl px-4 h-full md:h-auto">
+                <div className="bg-white rounded-lg shadow relative">
+                  <div className="flex items-start justify-between p-5 border-b rounded-t">
+                    <h3 className="text-xl font-semibold">Edit user</h3>
                     <button
                       type="button"
-                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                       data-modal-toggle="user-modal"
                     >
                       <svg
-                        class="w-5 h-5"
+                        className="w-5 h-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -417,14 +425,14 @@ function Users() {
                       </svg>
                     </button>
                   </div>
-  
-                  <div class="p-6 space-y-6">
+
+                  <div className="p-6 space-y-6">
                     <form action="#">
-                      <div class="grid grid-cols-6 gap-6">
-                        <div class="col-span-6 sm:col-span-3">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="first-name"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="first-name"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             First Name
                           </label>
@@ -432,15 +440,15 @@ function Users() {
                             type="text"
                             name="first-name"
                             id="first-name"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="Bonnie"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="last-name"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="last-name"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Last Name
                           </label>
@@ -448,15 +456,15 @@ function Users() {
                             type="text"
                             name="last-name"
                             id="last-name"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="Green"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="email"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="email"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Email
                           </label>
@@ -464,15 +472,15 @@ function Users() {
                             type="email"
                             name="email"
                             id="email"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="example@company.com"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="phone-number"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="phone-number"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Phone Number
                           </label>
@@ -480,15 +488,15 @@ function Users() {
                             type="number"
                             name="phone-number"
                             id="phone-number"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="e.g. +(12)3456 789"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="department"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="department"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Department
                           </label>
@@ -496,15 +504,15 @@ function Users() {
                             type="text"
                             name="department"
                             id="department"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="Development"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="company"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="company"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Company
                           </label>
@@ -512,15 +520,15 @@ function Users() {
                             type="number"
                             name="company"
                             id="company"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="123456"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="current-password"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="current-password"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Current Password
                           </label>
@@ -528,15 +536,15 @@ function Users() {
                             type="password"
                             name="current-password"
                             id="current-password"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="••••••••"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="new-password"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="new-password"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             New Password
                           </label>
@@ -544,7 +552,7 @@ function Users() {
                             type="password"
                             name="new-password"
                             id="new-password"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="••••••••"
                             required=""
                           />
@@ -552,10 +560,10 @@ function Users() {
                       </div>
                     </form>
                   </div>
-  
-                  <div class="items-center p-6 border-t border-gray-200 rounded-b">
+
+                  <div className="items-center p-6 border-t border-gray-200 rounded-b">
                     <button
-                      class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                       type="submit"
                     >
                       Save all
@@ -564,23 +572,23 @@ function Users() {
                 </div>
               </div>
             </div>
-  
+
             <div
-              class="hidden overflow-x-hidden overflow-y-auto fixed top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center h-modal sm:h-full"
+              className="hidden overflow-x-hidden overflow-y-auto fixed top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center h-modal sm:h-full"
               id="add-user-modal"
               aria-hidden="true"
             >
-              <div class="relative w-full max-w-2xl px-4 h-full md:h-auto">
-                <div class="bg-white rounded-lg shadow relative">
-                  <div class="flex items-start justify-between p-5 border-b rounded-t">
-                    <h3 class="text-xl font-semibold">Add new user</h3>
+              <div className="relative w-full max-w-2xl px-4 h-full md:h-auto">
+                <div className="bg-white rounded-lg shadow relative">
+                  <div className="flex items-start justify-between p-5 border-b rounded-t">
+                    <h3 className="text-xl font-semibold">Add new user</h3>
                     <button
                       type="button"
-                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                       data-modal-toggle="add-user-modal"
                     >
                       <svg
-                        class="w-5 h-5"
+                        className="w-5 h-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -593,14 +601,14 @@ function Users() {
                       </svg>
                     </button>
                   </div>
-  
-                  <div class="p-6 space-y-6">
+
+                  <div className="p-6 space-y-6">
                     <form action="#">
-                      <div class="grid grid-cols-6 gap-6">
-                        <div class="col-span-6 sm:col-span-3">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="first-name"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="first-name"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             First Name
                           </label>
@@ -608,15 +616,15 @@ function Users() {
                             type="text"
                             name="first-name"
                             id="first-name"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="Bonnie"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="last-name"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="last-name"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Last Name
                           </label>
@@ -624,15 +632,15 @@ function Users() {
                             type="text"
                             name="last-name"
                             id="last-name"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="Green"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="email"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="email"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Email
                           </label>
@@ -640,15 +648,15 @@ function Users() {
                             type="email"
                             name="email"
                             id="email"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="example@company.com"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="phone-number"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="phone-number"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Phone Number
                           </label>
@@ -656,15 +664,15 @@ function Users() {
                             type="number"
                             name="phone-number"
                             id="phone-number"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="e.g. +(12)3456 789"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="department"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="department"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Department
                           </label>
@@ -672,15 +680,15 @@ function Users() {
                             type="text"
                             name="department"
                             id="department"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="Development"
                             required=""
                           />
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="company"
-                            class="text-sm font-medium text-gray-900 block mb-2"
+                            htmlFor="company"
+                            className="text-sm font-medium text-gray-900 block mb-2"
                           >
                             Company
                           </label>
@@ -688,7 +696,7 @@ function Users() {
                             type="number"
                             name="company"
                             id="company"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                             placeholder="123456"
                             required=""
                           />
@@ -696,10 +704,10 @@ function Users() {
                       </div>
                     </form>
                   </div>
-  
-                  <div class="items-center p-6 border-t border-gray-200 rounded-b">
+
+                  <div className="items-center p-6 border-t border-gray-200 rounded-b">
                     <button
-                      class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                       type="submit"
                     >
                       Add user
@@ -708,22 +716,22 @@ function Users() {
                 </div>
               </div>
             </div>
-  
+
             <div
-              class="hidden overflow-x-hidden overflow-y-auto fixed top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center h-modal sm:h-full"
+              className="hidden overflow-x-hidden overflow-y-auto fixed top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center h-modal sm:h-full"
               id="delete-user-modal"
               aria-hidden="true"
             >
-              <div class="relative w-full max-w-md px-4 h-full md:h-auto">
-                <div class="bg-white rounded-lg shadow relative">
-                  <div class="flex justify-end p-2">
+              <div className="relative w-full max-w-md px-4 h-full md:h-auto">
+                <div className="bg-white rounded-lg shadow relative">
+                  <div className="flex justify-end p-2">
                     <button
                       type="button"
-                      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                       data-modal-toggle="delete-user-modal"
                     >
                       <svg
-                        class="w-5 h-5"
+                        className="w-5 h-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -736,10 +744,10 @@ function Users() {
                       </svg>
                     </button>
                   </div>
-  
-                  <div class="p-6 pt-0 text-center">
+
+                  <div className="p-6 pt-0 text-center">
                     <svg
-                      class="w-20 h-20 text-red-600 mx-auto"
+                      className="w-20 h-20 text-red-600 mx-auto"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -752,18 +760,18 @@ function Users() {
                         d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       ></path>
                     </svg>
-                    <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">
+                    <h3 className="text-xl font-normal text-gray-500 mt-5 mb-6">
                       Are you sure you want to delete this user?
                     </h3>
                     <a
                       href="/"
-                      class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2"
+                      className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2"
                     >
                       Yes, I'm sure
                     </a>
                     <a
                       href="/"
-                      class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
+                      className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
                       data-modal-toggle="delete-user-modal"
                     >
                       No, cancel
@@ -774,6 +782,7 @@ function Users() {
             </div>
           </main>
         </div>
+        )}
       </div>
     );
   }

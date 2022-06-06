@@ -14,7 +14,7 @@ function Bookings() {
         <main>
           <div className="pt-6 px-4">
             <div className="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-            <h1>Bookings</h1>
+              <h1>Bookings</h1>
             </div>
           </div>
         </main>
