@@ -28,6 +28,7 @@ function Partners() {
     partner_website_url: "",
   });
   const [editable, setEditable] = useState(false);
+  const [partnerId, setPartnerId] = useState(null);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -54,6 +55,28 @@ function Partners() {
       });
   };
 
+  const handleEdit = (e) => {
+    e.preventDefault();
+
+    const partnerEditData = {
+      partner_name: partnerName,
+      partner_email: partnerEmail,
+      partner_mobile: partnerMobile,
+      partner_physical_address: partnerPhysicalAddress,
+      partner_postal_address: partnerPostalAddress,
+      partner_website_url: partnerWebsiteUrl,
+      partner_id: partnerId,
+    };
+    axios
+      .put(
+        `https://apigari.herokuapp.com/api/v1/partner/edit/${partnerId}`,
+        partnerEditData
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  };
+
   const handleClickOpen = () => {
     setOpenAddPartnerDialog(true);
   };
@@ -62,14 +85,29 @@ function Partners() {
     setOpenAddPartnerDialog(false);
   };
 
-  const getDetails = (id) => {
-    let item = partners[id - 1];
-    setPartnerName(item && item.partner_name);
-    setPartnerEmail(item && item.partner_email);
-    setPartnerMobile(item && item.partner_mobile);
-    setPartnerPhysicalAddress(item && item.partner_physical_address);
-    setPartnerPostalAddress(item && item.partner_postal_address);
-    setPartnerWebsiteUrl(item && item.partner_website_url);
+  const getDetails = (partnerId) => {
+    fetch(`https://apigari.herokuapp.com/api/v1/partners/${partnerId}`)
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          setLoading(false);
+          setPartnerName(data.partner_details.partner_name);
+          setPartnerEmail(data.partner_details.partner_email);
+          setPartnerMobile(data.partner_details.partner_mobile);
+          setPartnerPhysicalAddress(
+            data.partner_details.partner_physical_address
+          );
+          setPartnerPostalAddress(data.partner_details.partner_postal_address);
+          setPartnerWebsiteUrl(data.partner_details.partner_website_url);
+          setPartnerId(data.partner_details.partner_id);
+          // setPartners(data.partners);
+          console.log(data.partner_details);
+        },
+        (error) => {
+          setLoading(false);
+          setError(error);
+        }
+      );
   };
 
   useEffect(() => {
@@ -79,14 +117,13 @@ function Partners() {
         (data) => {
           setLoading(false);
           setPartners(data.partners);
+          console.log(data.partners);
         },
         (error) => {
           setLoading(false);
           setError(error);
         }
       );
-
-    getDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -245,7 +282,9 @@ function Partners() {
                                     type="text"
                                     name="partner_name"
                                     value={partnerName}
-                                    onChange={handleChange}
+                                    onChange={(e) =>
+                                      setPartnerName(e.target.value)
+                                    }
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="John"
                                     required
@@ -262,7 +301,9 @@ function Partners() {
                                     type="tel"
                                     name="partner_mobile"
                                     value={partnerMobile}
-                                    onChange={handleChange}
+                                    onChange={(e) =>
+                                      setPartnerMobile(e.target.value)
+                                    }
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="719-240-756"
                                     pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
@@ -281,7 +322,9 @@ function Partners() {
                                     type="url"
                                     name="partner_website_url"
                                     value={partnerWebsiteUrl}
-                                    onChange={handleChange}
+                                    onChange={(e) =>
+                                      setPartnerWebsiteUrl(e.target.value)
+                                    }
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="https://www.gari.com"
                                     required
@@ -299,7 +342,9 @@ function Partners() {
                                     type="email"
                                     name="partner_email"
                                     value={partnerEmail}
-                                    onChange={handleChange}
+                                    onChange={(e) =>
+                                      setPartnerEmail(e.target.value)
+                                    }
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="john.doe@company.com"
                                     required
@@ -317,7 +362,9 @@ function Partners() {
                                   type="text"
                                   name="partner_physical_address"
                                   value={partnerPhysicalAddress}
-                                  onChange={handleChange}
+                                  onChange={(e) =>
+                                    setPartnerPhysicalAddress(e.target.value)
+                                  }
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                   placeholder="flowbite.com"
                                   required
@@ -334,14 +381,16 @@ function Partners() {
                                   type="text"
                                   name="partner_postal_address"
                                   value={partnerPostalAddress}
-                                  onChange={handleChange}
+                                  onChange={(e) =>
+                                    setPartnerPostalAddress(e.target.value)
+                                  }
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                   placeholder="Doe"
                                   required
                                 />
                               </div>
                               <button
-                                onClick={handleSubmit}
+                                onClick={handleEdit}
                                 type="submit"
                                 className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                               >
@@ -591,6 +640,7 @@ function Partners() {
                                     handleClickOpen();
                                     setEditable(true);
                                     getDetails(partner.partner_id);
+                                    setPartnerId(partner.partner_id);
                                   }}
                                   className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                                 >
