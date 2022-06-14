@@ -100,8 +100,6 @@ function Partners() {
           setPartnerPostalAddress(data.partner_details.partner_postal_address);
           setPartnerWebsiteUrl(data.partner_details.partner_website_url);
           setPartnerId(data.partner_details.partner_id);
-          // setPartners(data.partners);
-          console.log(data.partner_details);
         },
         (error) => {
           setLoading(false);
