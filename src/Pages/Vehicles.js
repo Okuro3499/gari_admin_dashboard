@@ -45,6 +45,25 @@ function Vehicles() {
   const [interior1Url, setInterior1Url] = useState("");
   const [interior2Image, setInterior2Image] = useState(null);
   const [interior2Url, setInterior2Url] = useState("");
+  const [editable, setEditable] = useState(false);
+  const [statusSelected, setStatusSelected] = useState(null);
+  const [transmissionSelected, setTransmissionSelected] = useState(null);
+  const [engineSelected, setEngineSelected] = useState(null);
+  const [driveSelected, setDriveSelected] = useState(null);
+  const [carId, setCarId] = useState(null);
+  const [carName, setCarName] = useState("");
+  const [status, setStatus] = useState("");
+  const [color, setColor] = useState("");
+  const [registration, setRegistration] = useState("");
+  const [price, setPrice] = useState("");
+  const [doors, setDoors] = useState("");
+  const [passengers, setPassengers] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [feature1, setFeature1] = useState("");
+  const [feature2, setFeature2] = useState("");
+  const [feature3, setFeature3] = useState("");
+  const [feature4, setFeature4] = useState("");
+  const [feature5, setFeature5] = useState("");
 
   const statusDropdown = [
     {
@@ -94,13 +113,10 @@ function Vehicles() {
     },
   ];
 
-  const [statusSelected, setStatusSelected] = useState(null);
-  const [transmissionSelected, setTransmissionSelected] = useState(null);
-  const [engineSelected, setEngineSelected] = useState(null);
-  const [driveSelected, setDriveSelected] = useState(null);
-
   const handleStatusChange = (e) => {
     setStatusSelected(e);
+    // {editable ? (): {}}
+    console.log(e.value);
   };
 
   const handleTransmissionChange = (e) => {
@@ -240,6 +256,48 @@ function Vehicles() {
       .then((response) => {
         console.log(response.status);
       });
+  };
+
+  const getDetails = (carId, e) => {
+    console.log(carId);
+    fetch(`https://apigari.herokuapp.com/api/v1/cars/${carId}`)
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          setLoading(false);
+          setCarName(data.single_car.car_name);
+          setColor(data.single_car.color);
+          setRegistration(data.single_car.registration);
+          setPrice(data.single_car.price);
+          setDoors(data.single_car.doors);
+          setPassengers(data.single_car.passengers);
+          setCompanyName(data.single_car.company);
+          setFeature1(data.single_car.feature_1);
+          setFeature2(data.single_car.feature_2);
+          setFeature3(data.single_car.feature_3);
+          setFeature4(data.single_car.feature_4);
+          setFeature5(data.single_car.feature_5);
+          // if (data.single_car.status.Text === "Available"){
+          //   setStatusSelected();
+          //   console.log(e.value)
+
+          // } else{
+          //   setStatusSelected("Booked")
+          // }
+          // setStatus(data.single_car.status);
+          // setPartnerMobile(data.partner_details.partner_mobile);
+          // setPartnerPhysicalAddress(
+          //   data.partner_details.partner_physical_address
+          // );
+          // setPartnerPostalAddress(data.partner_details.partner_postal_address);
+          // setPartnerWebsiteUrl(data.partner_details.partner_website_url);
+          // setPartnerId(data.partner_details.partner_id);
+        },
+        (error) => {
+          setLoading(false);
+          setError(error);
+        }
+      );
   };
 
   useEffect(() => {
@@ -383,6 +441,7 @@ function Vehicles() {
                         type="button"
                         onClick={() => {
                           handleClickOpen();
+                          setEditable(false);
                         }}
                         className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center sm:ml-auto"
                       >
@@ -402,197 +461,233 @@ function Vehicles() {
                       </button>
                       <Dialog open={openAddCarDialog} onClose={handleClose}>
                         <div className="max-w-2xl mx-auto bg-white p-16">
-                          <form>
-                            <div className="grid gap-4 mb-4 lg:grid-cols-2">
-                              <div>
+                          {editable ? (
+                            <form>
+                              <div className="grid gap-4 mb-4 lg:grid-cols-2">
+                                <div>
+                                  <label
+                                    htmlFor="car_name"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Car name
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="car_name"
+                                    value={carName}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Car name"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="status"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Status
+                                  </label>
+                                  <Select
+                                    placeholder="Available/Booked"
+                                    value={statusSelected}
+                                    options={statusDropdown}
+                                    onChange={handleStatusChange}
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="transmission"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Transmission
+                                  </label>
+                                  <Select
+                                    placeholder="Automatic/Manual"
+                                    value={transmissionSelected}
+                                    options={transmissionDropdown}
+                                    onChange={handleTransmissionChange}
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="engine"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Engine
+                                  </label>
+                                  <Select
+                                    placeholder="Petrol/Diesel"
+                                    value={engineSelected}
+                                    options={engineDropdown}
+                                    onChange={handleEngineChange}
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="color"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Color
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="color"
+                                    value={color}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Color"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="registration"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Registration
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="registration"
+                                    value={registration}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="KAA 0123A"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="price"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Price
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="price"
+                                    value={price}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Price in Ksh"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="doors"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Doors
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="doors"
+                                    value={doors}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="No. of doors"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="passengers"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Passengers
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="passengers"
+                                    value={passengers}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="No. of passengers"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="drive"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Drive
+                                  </label>
+                                  <Select
+                                    placeholder="Self Drive/Chauffered/Both"
+                                    value={driveSelected}
+                                    options={driveDropdown}
+                                    onChange={handleDriveChange}
+                                  />
+                                </div>
+                              </div>
+                              <div className="mb-2">
                                 <label
-                                  htmlFor="car_name"
+                                  htmlFor="company"
                                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                 >
-                                  Car name
+                                  Company Name
                                 </label>
                                 <input
                                   type="text"
-                                  name="car_name"
-                                  value={data.car_name}
+                                  name="company"
+                                  value={companyName}
                                   onChange={handleChange}
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Car name"
+                                  placeholder="Company Name"
                                 />
                               </div>
                               <div>
-                                <label
-                                  htmlFor="status"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                <div className="grid grid-cols-1 space-y-2">
+                                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                    Attach Front View Image
+                                  </label>
+
+                                  <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                    <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                      <img src={frontUrl} alt="preview" />
+                                      <div className="input_field flex flex-col mx-auto text-center">
+                                        <label>
+                                          <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                            <input
+                                              type="file"
+                                              onChange={(e) => {
+                                                setFrontImage(
+                                                  e.target.files[0]
+                                                );
+                                              }}
+                                              className="text-sm cursor-pointer w-10 hidden"
+                                            />
+                                            Select
+                                          </div>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <button
+                                  onClick={onFrontImageChange}
+                                  className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                                 >
-                                  Status
-                                </label>
-                                <Select
-                                  placeholder="Available/Booked"
-                                  value={statusSelected}
-                                  options={statusDropdown}
-                                  onChange={handleStatusChange}
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="transmission"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Transmission
-                                </label>
-                                <Select
-                                  placeholder="Automatic/Manual"
-                                  value={transmissionSelected}
-                                  options={transmissionDropdown}
-                                  onChange={handleTransmissionChange}
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="engine"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Engine
-                                </label>
-                                <Select
-                                  placeholder="Petrol/Diesel"
-                                  value={engineSelected}
-                                  options={engineDropdown}
-                                  onChange={handleEngineChange}
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="color"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Color
-                                </label>
-                                <input
-                                  type="text"
-                                  name="color"
-                                  value={data.color}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Color"
-                                />
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="registration"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Registration
-                                </label>
-                                <input
-                                  type="text"
-                                  name="registration"
-                                  value={data.registration}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="KAA 0123A"
-                                />
+                                  Upload
+                                </button>
                               </div>
 
-                              <div>
-                                <label
-                                  htmlFor="price"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Price
-                                </label>
-                                <input
-                                  type="text"
-                                  name="price"
-                                  value={data.price}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Price in Ksh"
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="doors"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Doors
-                                </label>
-                                <input
-                                  type="text"
-                                  name="doors"
-                                  value={data.doors}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="No. of doors"
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="passengers"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Passengers
-                                </label>
-                                <input
-                                  type="text"
-                                  name="passengers"
-                                  value={data.passengers}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="No. of passengers"
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="drive"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Drive
-                                </label>
-                                <Select
-                                  placeholder="Self Drive/Chauffered/Both"
-                                  value={driveSelected}
-                                  options={driveDropdown}
-                                  onChange={handleDriveChange}
-                                />
-                              </div>
-                            </div>
-                            <div className="mb-2">
-                              <label
-                                htmlFor="company"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                              >
-                                Company Name
-                              </label>
-                              <input
-                                type="text"
-                                name="company"
-                                value={data.company}
-                                onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Company Name"
-                              />
-                            </div>
-                            <div>
                               <div className="grid grid-cols-1 space-y-2">
                                 <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                  Attach Front View Image
+                                  Attach Back View Image
                                 </label>
-
                                 <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
                                   <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                                    <img src={frontUrl} alt="preview" />
+                                    <img src={backUrl} alt="preview" />
                                     <div className="input_field flex flex-col mx-auto text-center">
                                       <label>
                                         <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
                                           <input
                                             type="file"
                                             onChange={(e) => {
-                                              setFrontImage(e.target.files[0]);
+                                              setBackImage(e.target.files[0]);
                                             }}
                                             className="text-sm cursor-pointer w-10 hidden"
                                           />
@@ -605,272 +700,710 @@ function Vehicles() {
                               </div>
 
                               <button
-                                onClick={onFrontImageChange}
+                                onClick={onBackImageChange}
                                 className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                               >
                                 Upload
                               </button>
-                            </div>
 
-                            <div className="grid grid-cols-1 space-y-2">
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Attach Back View Image
-                              </label>
-                              <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
-                                <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                                  <img src={backUrl} alt="preview" />
-                                  <div className="input_field flex flex-col mx-auto text-center">
-                                    <label>
-                                      <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setBackImage(e.target.files[0]);
-                                          }}
-                                          className="text-sm cursor-pointer w-10 hidden"
-                                        />
-                                        Select
-                                      </div>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={onBackImageChange}
-                              className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              Upload
-                            </button>
-
-                            <div className="grid grid-cols-1 space-y-2">
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Attach Right Side View Image
-                              </label>
-                              <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
-                                <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                                  <img src={rightUrl} alt="preview" />
-                                  <div className="input_field flex flex-col mx-auto text-center">
-                                    <label>
-                                      <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setRightImage(e.target.files[0]);
-                                          }}
-                                          className="text-sm cursor-pointer w-10 hidden"
-                                        />
-                                        Select
-                                      </div>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={onRightImageChange}
-                              className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              Upload
-                            </button>
-
-                            <div className="grid grid-cols-1 space-y-2">
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Attach Left Side View Image
-                              </label>
-                              <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
-                                <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                                  <img src={leftUrl} alt="preview" />
-                                  <div className="input_field flex flex-col mx-auto text-center">
-                                    <label>
-                                      <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setLeftImage(e.target.files[0]);
-                                          }}
-                                          className="text-sm cursor-pointer w-10 hidden"
-                                        />
-                                        Select
-                                      </div>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={onLeftImageChange}
-                              className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              Upload
-                            </button>
-
-                            <div className="grid grid-cols-1 space-y-2">
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Attach Interior View Image (1)
-                              </label>
-                              <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
-                                <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                                  <img src={interior1Url} alt="preview" />
-                                  <div className="input_field flex flex-col mx-auto text-center">
-                                    <label>
-                                      <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setInterior1Image(
-                                              e.target.files[0]
-                                            );
-                                          }}
-                                          className="text-sm cursor-pointer w-10 hidden"
-                                        />
-                                        Select
-                                      </div>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={onInterior1ImageChange}
-                              className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              Upload
-                            </button>
-
-                            <div className="grid grid-cols-1 space-y-2">
-                              <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Attach Interior View Image (2)
-                              </label>
-                              <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
-                                <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
-                                  <img src={interior2Url} alt="preview" />
-                                  <div className="input_field flex flex-col mx-auto text-center">
-                                    <label>
-                                      <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setInterior2Image(
-                                              e.target.files[0]
-                                            );
-                                          }}
-                                          className="text-sm cursor-pointer w-10 hidden"
-                                        />
-                                        Select
-                                      </div>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={onInterior2ImageChange}
-                              className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              Upload
-                            </button>
-
-                            <div className="grid gap-4 mb-4 lg:grid-cols-2">
-                              <div>
-                                <label
-                                  htmlFor="feature_1"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Feature 1
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Right Side View Image
                                 </label>
-                                <input
-                                  type="text"
-                                  name="feature_1"
-                                  value={data.feature_1}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Feature 1"
-                                />
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={rightUrl} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setRightImage(e.target.files[0]);
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
 
-                              <div>
-                                <label
-                                  htmlFor="feature_2"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Feature 2
-                                </label>
-                                <input
-                                  type="text"
-                                  name="feature_2"
-                                  value={data.feature_2}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Feature 2"
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="feature_3"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Feature 3
-                                </label>
-                                <input
-                                  type="text"
-                                  name="feature_3"
-                                  value={data.feature_3}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Feature 3"
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="feature_4"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Feature 4
-                                </label>
-                                <input
-                                  type="text"
-                                  name="feature_4"
-                                  value={data.feature_4}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Feature 4"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="mb-4">
-                              <label
-                                htmlFor="feature_5"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                              <button
+                                onClick={onRightImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
                               >
-                                Feature 5
-                              </label>
-                              <input
-                                type="text"
-                                name="feature_5"
-                                value={data.feature_5}
-                                onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Feature 5"
-                              />
-                            </div>
-                            <button
-                              onClick={handleSubmit}
-                              type="submit"
-                              className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                            >
-                              Add Vehicle
-                            </button>
-                          </form>
-                          {/* )} */}
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Left Side View Image
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={leftUrl} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setLeftImage(e.target.files[0]);
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onLeftImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Interior View Image (1)
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={interior1Url} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setInterior1Image(
+                                                e.target.files[0]
+                                              );
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onInterior1ImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Interior View Image (2)
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={interior2Url} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setInterior2Image(
+                                                e.target.files[0]
+                                              );
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onInterior2ImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid gap-4 mb-4 lg:grid-cols-2">
+                                <div>
+                                  <label
+                                    htmlFor="feature_1"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 1
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_1"
+                                    value={feature1}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 1"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="feature_2"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 2
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_2"
+                                    value={feature2}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 2"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="feature_3"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 3
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_3"
+                                    value={feature3}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 3"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="feature_4"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 4
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_4"
+                                    value={feature4}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 4"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="mb-4">
+                                <label
+                                  htmlFor="feature_5"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                >
+                                  Feature 5
+                                </label>
+                                <input
+                                  type="text"
+                                  name="feature_5"
+                                  value={feature5}
+                                  onChange={handleChange}
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                  placeholder="Feature 5"
+                                />
+                              </div>
+                              <button
+                                onClick={handleSubmit}
+                                type="submit"
+                                className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Edit Vehicle
+                              </button>
+                            </form>
+                          ) : (
+                            <form>
+                              <div className="grid gap-4 mb-4 lg:grid-cols-2">
+                                <div>
+                                  <label
+                                    htmlFor="car_name"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Car name
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="car_name"
+                                    value={data.car_name}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Car name"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="status"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Status
+                                  </label>
+                                  <Select
+                                    placeholder="Available/Booked"
+                                    value={statusSelected}
+                                    options={statusDropdown}
+                                    onChange={handleStatusChange}
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="transmission"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Transmission
+                                  </label>
+                                  <Select
+                                    placeholder="Automatic/Manual"
+                                    value={transmissionSelected}
+                                    options={transmissionDropdown}
+                                    onChange={handleTransmissionChange}
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="engine"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Engine
+                                  </label>
+                                  <Select
+                                    placeholder="Petrol/Diesel"
+                                    value={engineSelected}
+                                    options={engineDropdown}
+                                    onChange={handleEngineChange}
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="color"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Color
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="color"
+                                    value={data.color}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Color"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    htmlFor="registration"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Registration
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="registration"
+                                    value={data.registration}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="KAA 0123A"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="price"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Price
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="price"
+                                    value={data.price}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Price in Ksh"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="doors"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Doors
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="doors"
+                                    value={data.doors}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="No. of doors"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="passengers"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Passengers
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="passengers"
+                                    value={data.passengers}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="No. of passengers"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="drive"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Drive
+                                  </label>
+                                  <Select
+                                    placeholder="Self Drive/Chauffered/Both"
+                                    value={driveSelected}
+                                    options={driveDropdown}
+                                    onChange={handleDriveChange}
+                                  />
+                                </div>
+                              </div>
+                              <div className="mb-2">
+                                <label
+                                  htmlFor="company"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                >
+                                  Company Name
+                                </label>
+                                <input
+                                  type="text"
+                                  name="company"
+                                  value={data.company}
+                                  onChange={handleChange}
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                  placeholder="Company Name"
+                                />
+                              </div>
+                              <div>
+                                <div className="grid grid-cols-1 space-y-2">
+                                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                    Attach Front View Image
+                                  </label>
+
+                                  <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                    <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                      <img src={frontUrl} alt="preview" />
+                                      <div className="input_field flex flex-col mx-auto text-center">
+                                        <label>
+                                          <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                            <input
+                                              type="file"
+                                              onChange={(e) => {
+                                                setFrontImage(
+                                                  e.target.files[0]
+                                                );
+                                              }}
+                                              className="text-sm cursor-pointer w-10 hidden"
+                                            />
+                                            Select
+                                          </div>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <button
+                                  onClick={onFrontImageChange}
+                                  className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                                >
+                                  Upload
+                                </button>
+                              </div>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Back View Image
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={backUrl} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setBackImage(e.target.files[0]);
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onBackImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Right Side View Image
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={rightUrl} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setRightImage(e.target.files[0]);
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onRightImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Left Side View Image
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={leftUrl} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setLeftImage(e.target.files[0]);
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onLeftImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Interior View Image (1)
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={interior1Url} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setInterior1Image(
+                                                e.target.files[0]
+                                              );
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onInterior1ImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid grid-cols-1 space-y-2">
+                                <label className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+                                  Attach Interior View Image (2)
+                                </label>
+                                <div className=" p-4 bg-white  bg-whtie m-auto rounded-lg">
+                                  <div className=" p-5 relative border-4 border-dotted border-gray-300 rounded-lg">
+                                    <img src={interior2Url} alt="preview" />
+                                    <div className="input_field flex flex-col mx-auto text-center">
+                                      <label>
+                                        <div className=" text-white bg-cyan-600 hover:bg-cyan-700 flex justify-center border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3">
+                                          <input
+                                            type="file"
+                                            onChange={(e) => {
+                                              setInterior2Image(
+                                                e.target.files[0]
+                                              );
+                                            }}
+                                            className="text-sm cursor-pointer w-10 hidden"
+                                          />
+                                          Select
+                                        </div>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={onInterior2ImageChange}
+                                className="w-1/2 text-white mb-4 bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Upload
+                              </button>
+
+                              <div className="grid gap-4 mb-4 lg:grid-cols-2">
+                                <div>
+                                  <label
+                                    htmlFor="feature_1"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 1
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_1"
+                                    value={data.feature_1}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 1"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="feature_2"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 2
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_2"
+                                    value={data.feature_2}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 2"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="feature_3"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 3
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_3"
+                                    value={data.feature_3}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 3"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="feature_4"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                  >
+                                    Feature 4
+                                  </label>
+                                  <input
+                                    type="text"
+                                    name="feature_4"
+                                    value={data.feature_4}
+                                    onChange={handleChange}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Feature 4"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="mb-4">
+                                <label
+                                  htmlFor="feature_5"
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                >
+                                  Feature 5
+                                </label>
+                                <input
+                                  type="text"
+                                  name="feature_5"
+                                  value={data.feature_5}
+                                  onChange={handleChange}
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                  placeholder="Feature 5"
+                                />
+                              </div>
+                              <button
+                                onClick={handleSubmit}
+                                type="submit"
+                                className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
+                              >
+                                Add Vehicle
+                              </button>
+                            </form>
+                          )}
                         </div>
                       </Dialog>
                     </div>
@@ -978,7 +1511,12 @@ function Vehicles() {
                               <td className="p-4 whitespace-nowrap space-x-2">
                                 <button
                                   type="button"
-                                  data-modal-toggle="product-modal"
+                                  onClick={() => {
+                                    handleClickOpen();
+                                    setEditable(true);
+                                    getDetails(car.car_id);
+                                    setCarId(car.car_id);
+                                  }}
                                   className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                                 >
                                   <svg
