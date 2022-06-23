@@ -52,7 +52,7 @@ function Vehicles() {
   const [driveSelected, setDriveSelected] = useState(null);
   const [carId, setCarId] = useState(null);
   const [carName, setCarName] = useState("");
-  const [status, setStatus] = useState("");
+  // const [status, setStatus] = useState("");
   const [color, setColor] = useState("");
   const [registration, setRegistration] = useState("");
   const [price, setPrice] = useState("");
@@ -64,71 +64,71 @@ function Vehicles() {
   const [feature3, setFeature3] = useState("");
   const [feature4, setFeature4] = useState("");
   const [feature5, setFeature5] = useState("");
-
+  
   const statusDropdown = [
     {
-      value: 1,
+      value: "Available",
       label: "Available",
     },
     {
-      value: 2,
+      value: "Booked",
       label: "Booked",
     },
   ];
 
   const transmissionDropdown = [
     {
-      value: 1,
+      value: "Automatic",
       label: "Automatic",
     },
     {
-      value: 2,
+      value: "Manual",
       label: "Manual",
     },
   ];
 
   const engineDropdown = [
     {
-      value: 1,
+      value: "Petrol",
       label: "Petrol",
     },
     {
-      value: 2,
+      value: "Diesel",
       label: "Diesel",
     },
   ];
 
   const driveDropdown = [
     {
-      value: 1,
+      value: "Self Drive",
       label: "Self Drive",
     },
     {
-      value: 2,
+      value: "Chauffered",
       label: "Chauffered",
     },
     {
-      value: 3,
+      value: "Self Drive & Chauffered",
       label: "Self Drive & Chauffered",
     },
   ];
 
-  const handleStatusChange = (e) => {
+  const handleStatusChange = e => {
     setStatusSelected(e);
-    // {editable ? (): {}}
-    console.log(e.value);
   };
 
-  const handleTransmissionChange = (e) => {
+  const handleTransmissionChange = e => {
     setTransmissionSelected(e);
   };
 
-  const handleEngineChange = (e) => {
+  const handleEngineChange = e => {
     setEngineSelected(e);
+    console.log(e.value);
   };
 
-  const handleDriveChange = (e) => {
+  const handleDriveChange = e => {
     setDriveSelected(e);
+    console.log(e.value);
   };
 
   const onFrontImageChange = (e) => {
@@ -229,16 +229,16 @@ function Vehicles() {
     e.preventDefault();
     const carData = {
       car_name: data.car_name,
-      status: data.status,
-      transmission: data.transmission,
-      engine: data.engine,
+      status: statusSelected.value,
+      transmission: transmissionSelected.value,
+      engine: engineSelected.value,
       color: data.color,
       registration: data.registration,
       passengers: data.passengers,
       company: data.company,
       price: data.price,
       doors: data.doors,
-      drive: data.drive,
+      drive: driveSelected.value,
       front_view: frontUrl,
       back_view: backUrl,
       right_view: rightUrl,
@@ -251,9 +251,11 @@ function Vehicles() {
       feature_4: data.feature_4,
       feature_5: data.feature_5,
     };
+    console.log(carData)
     axios
       .post("https://apigari.herokuapp.com/api/v1/newcar", carData)
       .then((response) => {
+        handleClose();
         console.log(response.status);
       });
   };
@@ -339,10 +341,7 @@ function Vehicles() {
             </div>
           </div>
         ) : (
-          <div
-            id="main-content"
-            className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64"
-          >
+          <div id="main-content" className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64">
             <main>
               <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
                 <div className="mb-1 w-full">
@@ -491,7 +490,7 @@ function Vehicles() {
                                     placeholder="Available/Booked"
                                     value={statusSelected}
                                     options={statusDropdown}
-                                    onChange={handleStatusChange}
+                                    // onChange={handleStatusChange}
                                   />
                                 </div>
                                 <div>
@@ -505,7 +504,7 @@ function Vehicles() {
                                     placeholder="Automatic/Manual"
                                     value={transmissionSelected}
                                     options={transmissionDropdown}
-                                    onChange={handleTransmissionChange}
+                                    // onChange={handleTransmissionChange}
                                   />
                                 </div>
                                 <div>
@@ -519,7 +518,7 @@ function Vehicles() {
                                     placeholder="Petrol/Diesel"
                                     value={engineSelected}
                                     options={engineDropdown}
-                                    onChange={handleEngineChange}
+                                    // onChange={handleEngineChange}
                                   />
                                 </div>
                                 <div>
@@ -617,7 +616,7 @@ function Vehicles() {
                                     placeholder="Self Drive/Chauffered/Both"
                                     value={driveSelected}
                                     options={driveDropdown}
-                                    onChange={handleDriveChange}
+                                    // onChange={handleDriveChange}
                                   />
                                 </div>
                               </div>
