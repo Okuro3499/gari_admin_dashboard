@@ -2,50 +2,16 @@ import React, { useState, useEffect } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import axios from "axios";
 import { BallTriangle } from "react-loader-spinner";
+import EditStaff from "../components/Staff/EditStaff";
+import NewStaff from "../components/Staff/NewStaff";
 
 function Staff() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [staffs, setStaffs] = useState([]);
   const [openAddStaffDialog, setOpenAddStaffialog] = useState(false);
-  const [staffName, setStaffName] = useState("");
-  const [staffEmail, setStaffEmail] = useState("");
-  const [staffPosition, setStaffPosition] = useState("");
-  const [staffIdNumber, setStaffIdNumber] = useState("");
-  const [staffMobile, setStaffMobile] = useState("");
-  const [data, setData] = useState({
-    staff_name: "",
-    staff_email: "",
-    staff_position: "",
-    staff_id_number: "",
-    staff_mobile: "",
-  });
   const [editable, setEditable] = useState(false);
-  const [staffId, setStaffId] = useState(null);
-
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const staffData = {
-      staff_name: data.staff_name,
-      staff_email: data.staff_email,
-      staff_position: data.staff_position,
-      staff_id_number: data.staff_id_number,
-      staff_mobile: data.staff_mobile,
-    };
-    axios
-      .post("https://apigari.herokuapp.com/api/v1/newStaff", staffData)
-      .then((response) => {
-        console.log(response.status);
-      });
-  };
+  const [staffId, setStaffId] = useState("");
 
   const handleClickOpen = () => {
     setOpenAddStaffialog(true);
@@ -53,49 +19,6 @@ function Staff() {
 
   const handleClose = () => {
     setOpenAddStaffialog(false);
-  };
-
-  const getDetails = (staffId) => {
-    fetch(`https://apigari.herokuapp.com/api/v1/staff/${staffId}`)
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setStaffName(data.staff_details.staff_name);
-          setStaffEmail(data.staff_details.staff_email);
-          setStaffPosition(data.staff_details.staff_position);
-          setStaffIdNumber(data.staff_details.staff_id_number);
-          setStaffMobile(data.staff_details.staff_mobile);
-          setStaffId(data.staff_details.staff_id);
-          // setstaffs(data.staffs);
-          console.log(data.staff_details);
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        }
-      );
-  };
-
-  const handleEdit = (e) => {
-    e.preventDefault();
-
-    const staffEditData = {
-      staff_name: staffName,
-      staff_email: staffEmail,
-      staff_position: staffPosition,
-      staff_id_number: staffIdNumber,
-      staff_mobile: staffMobile,
-      staff_id: staffId,
-    };
-    axios
-      .put(
-        `https://apigari.herokuapp.com/api/v1/staff/edit/${staffId}`,
-        staffEditData
-      )
-      .then((response) => {
-        console.log(response);
-      });
   };
 
   useEffect(() => {
@@ -112,7 +35,7 @@ function Staff() {
           setError(error);
         }
       );
-    getDetails();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -258,220 +181,11 @@ function Staff() {
                         Add staff
                       </button>
                       <Dialog open={openAddStaffDialog} onClose={handleClose}>
-                        <div className="max-w-2xl mx-auto bg-white p-16">
-                          {editable ? (
-                            <form>
-                              <div className="grid gap-4 mb-4 lg:grid-cols-2">
-                                <div>
-                                  <label
-                                    htmlFor="company_name"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Staff name
-                                  </label>
-                                  <input
-                                    type="text"
-                                    name="staff_name"
-                                    value={staffName}
-                                    onChange={(e) =>
-                                      setStaffName(e.target.value)
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="John"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="phone"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Phone number
-                                  </label>
-                                  <input
-                                    type="tel"
-                                    name="staff_mobile"
-                                    value={staffMobile}
-                                    onChange={(e) =>
-                                      setStaffMobile(e.target.value)
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="123-45-678"
-                                    pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="idNumber"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Id Number
-                                  </label>
-                                  <input
-                                    type="number"
-                                    name="staff_id_number"
-                                    value={staffIdNumber}
-                                    onChange={(e) =>
-                                      setStaffIdNumber(e.target.value)
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="12345678"
-                                    required
-                                  />
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Email address
-                                  </label>
-                                  <input
-                                    type="email"
-                                    name="staff_email"
-                                    value={staffEmail}
-                                    onChange={(e) =>
-                                      setStaffEmail(e.target.value)
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="john.doe@company.com"
-                                    required
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="mb-4">
-                                <label
-                                  htmlFor="position"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Position
-                                </label>
-                                <input
-                                  type="text"
-                                  name="staff_position"
-                                  value={staffPosition}
-                                  onChange={(e) =>
-                                    setStaffPosition(e.target.value)
-                                  }
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Staff"
-                                  required
-                                />
-                              </div>
-                              <button
-                                onClick={handleEdit}
-                                type="submit"
-                                className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                              >
-                                Edit
-                              </button>
-                            </form>
-                          ) : (
-                            <form>
-                              <div className="grid gap-4 mb-4 lg:grid-cols-2">
-                                <div>
-                                  <label
-                                    htmlFor="company_name"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Staff name
-                                  </label>
-                                  <input
-                                    type="text"
-                                    name="staff_name"
-                                    value={data.staff_name}
-                                    onChange={handleChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="John"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="phone"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Phone number
-                                  </label>
-                                  <input
-                                    type="tel"
-                                    name="staff_mobile"
-                                    value={data.staff_mobile}
-                                    onChange={handleChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="123-45-678"
-                                    pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="idNumber"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Id Number
-                                  </label>
-                                  <input
-                                    type="number"
-                                    name="staff_id_number"
-                                    value={data.staff_id_number}
-                                    onChange={handleChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="12345678"
-                                    required
-                                  />
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                  >
-                                    Email address
-                                  </label>
-                                  <input
-                                    type="email"
-                                    name="staff_email"
-                                    value={data.staff_email}
-                                    onChange={handleChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="john.doe@company.com"
-                                    required
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="mb-4">
-                                <label
-                                  htmlFor="position"
-                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                >
-                                  Position
-                                </label>
-                                <input
-                                  type="text"
-                                  name="staff_position"
-                                  value={data.staff_position}
-                                  onChange={handleChange}
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                  placeholder="Staff"
-                                  required
-                                />
-                              </div>
-                              <button
-                                // onClick={handleClose}
-                                onClick={handleSubmit}
-                                type="submit"
-                                className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-                              >
-                                Submit
-                              </button>
-                            </form>
-                          )}
-                        </div>
+                        {editable ? (
+                          <EditStaff staffId={staffId} />
+                        ) : (
+                          <NewStaff />
+                        )}
                       </Dialog>
                       <a
                         href="/"
@@ -600,7 +314,7 @@ function Staff() {
                                   onClick={() => {
                                     handleClickOpen(staff.staff_id);
                                     setEditable(true);
-                                    getDetails(staff.staff_id);
+                                    setStaffId(staff.staff_id);
                                   }}
                                   className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                                 >

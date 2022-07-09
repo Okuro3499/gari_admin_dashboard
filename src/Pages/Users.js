@@ -79,9 +79,9 @@ function Users() {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       </a>
@@ -96,9 +96,9 @@ function Users() {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       </a>
@@ -113,9 +113,9 @@ function Users() {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            fill-rule="evenodd"
+                            fillRule="evenodd"
                             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                            clip-rule="evenodd"
+                            clipRule="evenodd"
                           ></path>
                         </svg>
                       </a>
@@ -147,9 +147,9 @@ function Users() {
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                       Add user
@@ -165,9 +165,9 @@ function Users() {
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                       Export
@@ -225,7 +225,7 @@ function Users() {
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {clients.map((client) => (
-                          <tr className="hover:bg-gray-100">
+                          <tr className="hover:bg-gray-100" key={client.client_id}>
                             <td className="p-4 w-4">
                               <div className="flex items-center">
                                 <input
@@ -280,9 +280,9 @@ function Users() {
                                 >
                                   <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
                                   <path
-                                    fill-rule="evenodd"
+                                    fillRule="evenodd"
                                     d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                    clip-rule="evenodd"
+                                    clipRule="evenodd"
                                   ></path>
                                 </svg>
                                 Edit user
@@ -299,9 +299,9 @@ function Users() {
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
-                                    fill-rule="evenodd"
+                                    fillRule="evenodd"
                                     d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"
+                                    clipRule="evenodd"
                                   ></path>
                                 </svg>
                                 Delete user
@@ -328,9 +328,9 @@ function Users() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </a>
@@ -345,9 +345,9 @@ function Users() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </a>
@@ -369,9 +369,9 @@ function Users() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                   Previous
@@ -388,9 +388,9 @@ function Users() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </a>
@@ -418,9 +418,9 @@ function Users() {
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -594,9 +594,9 @@ function Users() {
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -737,9 +737,9 @@ function Users() {
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -754,9 +754,9 @@ function Users() {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       ></path>
                     </svg>
