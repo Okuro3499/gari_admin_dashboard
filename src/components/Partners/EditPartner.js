@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Success from "../Success";
+import Dialog from "@material-ui/core/Dialog";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 const EditPartner = ({ partnerId }) => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true);
   const [partnerDetails, setPartnerDetails] = useState({
     partner_name: "",
     partner_email: "",
@@ -15,18 +17,23 @@ const EditPartner = ({ partnerId }) => {
     partner_website_url: "",
   });
   const [spin, setSpin] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const notify = () => {
-    toast.success("Car Edited Successfully", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  // const notify = () => {
+  //   toast.success("Car Edited Successfully", {
+  //     position: "top-center",
+  //     autoClose: 5000,
+  //     hideProgressBar: true,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
+
+  const handleSuccessClose = () => {
+    setSuccess(false);
+  }; 
 
   const handleEdit = (e) => {
     e.preventDefault();
@@ -46,8 +53,10 @@ const EditPartner = ({ partnerId }) => {
         partnerEditData
       )
       .then((response) => {
-        notify();
-        window.location.reload(false);
+        // notify();
+        // window.location.reload(false);
+        setSuccess(true);
+        setSpin(false);
         console.log(response);
       });
   };
@@ -57,18 +66,20 @@ const EditPartner = ({ partnerId }) => {
       .then((response) => response.json())
       .then(
         (data) => {
-          setLoading(false);
+          // setLoading(false);
           setPartnerDetails(data.partner_details);
         },
         (error) => {
-          setLoading(false);
-          setError(error);
+          // setLoading(false);
+          // setError(error);
         }
       );
   }, [partnerId]);
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <ToastContainer />
+      <Dialog open={success} onClose={handleSuccessClose}>
+        <Success />      
+      </Dialog>
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
           <div>
@@ -210,7 +221,7 @@ const EditPartner = ({ partnerId }) => {
         <button
           onClick={handleEdit}
           className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-          disabled={loading}
+          disabled={spin}
         >
           {spin && (
             <div>

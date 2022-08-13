@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Dialog from "@material-ui/core/Dialog";
+import React, { useState } from "react";
 import axios from "axios";
 import Select from "react-select";
+import Success from "../Success";
+import Dialog from "@material-ui/core/Dialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const NewVehicle = ({ props }) => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     car_name: "",
     status: "",
@@ -55,6 +56,7 @@ const NewVehicle = ({ props }) => {
   const [spin4, setSpin4] = useState(false);
   const [spin5, setSpin5] = useState(false);
   const [spin6, setSpin6] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const statusDropdown = [
     {
@@ -103,6 +105,10 @@ const NewVehicle = ({ props }) => {
       label: "Self Drive & Chauffered",
     },
   ];
+
+  const handleSuccessClose = () => {
+    setSuccess(false);
+  };
 
   const handleStatusChange = (e) => {
     setStatusSelected(e);
@@ -218,17 +224,17 @@ const NewVehicle = ({ props }) => {
     });
   };
 
-  const notify = () => {
-    toast.success("New Car Added Successfully", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  // const notify = () => {
+  //   toast.success("New Car Added Successfully", {
+  //     position: "top-center",
+  //     autoClose: 5000,
+  //     hideProgressBar: true,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
 
   const imageUpload = () => {
     toast.success("Upload Successfully", {
@@ -272,13 +278,17 @@ const NewVehicle = ({ props }) => {
     axios
       .post("https://apigari.herokuapp.com/api/v1/newcar", carData)
       .then((response) => {
-        notify();
-        window.location.reload(false);
+        console.log(response);
+        setSuccess(true);
+        setSpin(false);
       });
   };
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
+      <Dialog open={success} onClose={handleSuccessClose}>
+        <Success />      
+      </Dialog>
       <ToastContainer />
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
@@ -326,7 +336,7 @@ const NewVehicle = ({ props }) => {
               placeholder="Automatic/Manual"
               value={transmissionSelected}
               options={transmissionDropdown}
-              onChange={handleTransmissionChange}
+              onChange={handleTransmissionChange}xxxsz   
             />
           </div>
 
@@ -812,7 +822,7 @@ const NewVehicle = ({ props }) => {
           type="submit"
           onClick={handleSubmit}
           className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-          disabled={loading}
+          disabled={spin}
         >
           {spin && (
             <div>

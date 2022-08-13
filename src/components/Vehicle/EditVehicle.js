@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
+import Success from "../Success";
+import Dialog from "@material-ui/core/Dialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EditVehicle = ({ carId }) => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true);
   const [carDetails, setCarDetails] = useState({
     car_id: "",
     car_name: "",
@@ -55,6 +57,7 @@ const EditVehicle = ({ carId }) => {
   const [spin4, setSpin4] = useState(false);
   const [spin5, setSpin5] = useState(false);
   const [spin6, setSpin6] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const statusDropdown = [
     {
@@ -103,6 +106,10 @@ const EditVehicle = ({ carId }) => {
       label: "Self Drive & Chauffered",
     },
   ];
+
+  const handleSuccessClose = () => {
+    setSuccess(false);
+  };
 
   const handleStatusChange = (e) => {
     setStatusSelected(e);
@@ -246,21 +253,9 @@ const EditVehicle = ({ carId }) => {
       )
       .then((response) => {
         console.log(response);
-        notify();
-        window.location.reload(false);
+        setSuccess(true);
+        setSpin(false);
       });
-  };
-
-  const notify = () => {
-    toast.success("Car Edited Successfully", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
   };
 
   const imageUpload = () => {
@@ -280,7 +275,7 @@ const EditVehicle = ({ carId }) => {
       .then((response) => response.json())
       .then(
         (data) => {
-          setLoading(false);
+          // setLoading(false);
           setCarDetails(data.single_car);
           setFrontUrl(data.single_car.front_view);
           setBackUrl(data.single_car.back_view);
@@ -288,25 +283,28 @@ const EditVehicle = ({ carId }) => {
           setLeftUrl(data.single_car.left_view);
           setInterior1Url(data.single_car.interior_1);
           setInterior2Url(data.single_car.interior_2);
+          setStatusSelected(data.single_car.status)
         },
         (error) => {
-          setLoading(false);
-          setError(error);
+          // setLoading(false);
+          // setError(error);
         }
       );
   }, [carId]);
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <ToastContainer />
+      <Dialog open={success} onClose={handleSuccessClose}>
+        <Success />      
+      </Dialog>
+      <ToastContainer/>
       <form>
         <div>
           <div className="grid gap-4 mb-4 lg:grid-cols-2">
             <div>
               <label
                 htmlFor="car_name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Car name
               </label>
               <input
@@ -317,108 +315,96 @@ const EditVehicle = ({ carId }) => {
                   setCarDetails({ ...carDetails, car_name: e.target.value })
                 }
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Car name"
-              />
+                placeholder="Car name"/>
             </div>
 
             <div>
               <label
                 htmlFor="status"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Status
               </label>
               <Select
                 placeholder="Available/Booked"
                 value={statusSelected}
                 options={statusDropdown}
-                onChange={handleStatusChange}
-              />
+                onChange={handleStatusChange}/>
             </div>
 
             <div>
               <label
                 htmlFor="transmission"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Transmission
               </label>
               <Select
                 placeholder="Automatic/Manual"
                 value={transmissionSelected}
                 options={transmissionDropdown}
-                onChange={handleTransmissionChange}
-              />
+                onChange={handleTransmissionChange}/>
             </div>
 
             <div>
               <label
                 htmlFor="engine"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Engine
               </label>
               <Select
                 placeholder="Petrol/Diesel"
                 value={engineSelected}
                 options={engineDropdown}
-                onChange={handleEngineChange}
-              />
+                onChange={handleEngineChange}/>
             </div>
 
             <div>
               <label
                 htmlFor="color"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Color
               </label>
               <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 type="text"
                 name="color"
                 value={carDetails.color}
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, color: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Color"
-              />
+                placeholder="Color"/>
             </div>
 
             <div>
               <label
                 htmlFor="registration"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Registration
               </label>
               <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 type="text"
                 name="registration"
                 value={carDetails.registration}
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, registration: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="KAA 0123A"
-              />
+                placeholder="KAA 0123A"/>
             </div>
 
             <div>
               <label
                 htmlFor="price"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Price
               </label>
               <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 type="text"
                 name="price"
                 value={carDetails.color}
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, price: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Price in Ksh"
               />
             </div>
@@ -426,18 +412,17 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="doors"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Doors
               </label>
               <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 type="text"
                 name="doors"
                 value={carDetails.color}
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, doors: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="No. of doors"
               />
             </div>
@@ -445,43 +430,38 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="passengers"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Passengers
               </label>
               <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 type="text"
                 name="passengers"
                 value={carDetails.passengers}
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, passengers: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="No. of passengers"
-              />
+                placeholder="No. of passengers"/>
             </div>
 
             <div>
               <label
                 htmlFor="drive"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Drive
               </label>
               <Select
                 placeholder="Self Drive/Chauffered/Both"
                 value={driveSelected}
                 options={driveDropdown}
-                onChange={handleDriveChange}
-              />
+                onChange={handleDriveChange}/>
             </div>
           </div>
 
           <div className="mb-2">
             <label
               htmlFor="company"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Company Name
             </label>
             <input
@@ -856,7 +836,7 @@ const EditVehicle = ({ carId }) => {
           type="submit"
           onClick={handleEdit}
           className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-          disabled={loading}
+          disabled={spin}
         >
           {spin && (
             <div>

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Success from "../Success";
+import Dialog from "@material-ui/core/Dialog";
 
 const NewStaff = () => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   const [data, setData] = useState({
     staff_name: "",
     staff_email: "",
@@ -15,6 +13,8 @@ const NewStaff = () => {
     staff_mobile: "",
   });
   const [spin, setSpin] = useState(false);
+  const [success, setSuccess] = useState(false);
+
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -24,16 +24,8 @@ const NewStaff = () => {
     });
   };
 
-  const notify = () => {
-    toast.success("Staff Added Successfully", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  const handleSuccessClose = () => {
+    setSuccess(false);
   };
 
   const handleSubmit = (e) => {
@@ -49,22 +41,22 @@ const NewStaff = () => {
     axios
       .post("https://apigari.herokuapp.com/api/v1/newStaff", staffData)
       .then((response) => {
-        notify();
-        window.location.reload(false);
-        console.log(response.status);
+        setSuccess(true);
+        setSpin(false);
       });
   };
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <ToastContainer />
+      <Dialog open={success} onClose={handleSuccessClose}>
+        <Success />      
+      </Dialog>
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
           <div>
             <label
               htmlFor="company_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Staff name
             </label>
             <input
@@ -74,14 +66,12 @@ const NewStaff = () => {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="John"
-              required
-            />
+              required/>
           </div>
           <div>
             <label
               htmlFor="phone"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Phone number
             </label>
             <input
@@ -92,14 +82,12 @@ const NewStaff = () => {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="123-45-678"
               pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-              required
-            />
+              required/>
           </div>
           <div>
             <label
               htmlFor="idNumber"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Id Number
             </label>
             <input
@@ -109,15 +97,13 @@ const NewStaff = () => {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="12345678"
-              required
-            />
+              required/>
           </div>
 
           <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
               Email address
             </label>
             <input
@@ -127,16 +113,14 @@ const NewStaff = () => {
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="john.doe@company.com"
-              required
-            />
+              required/>
           </div>
         </div>
 
         <div className="mb-4">
           <label
             htmlFor="position"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Position
           </label>
           <input
@@ -146,21 +130,18 @@ const NewStaff = () => {
             onChange={handleChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Staff"
-            required
-          />
+            required/>
         </div>
         <button
           type="submit"
           onClick={handleSubmit}
           className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-          disabled={loading}
-        >
+          disabled={spin}>
           {spin && (
             <div>
               <svg
                 class="animate-spin h-5 w-5 mr-3 bg-white"
-                viewBox="0 0 20 20"
-              />
+                viewBox="0 0 20 20"/>
             </div>
           )}
           {spin && <span>Adding Staff</span>}

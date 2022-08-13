@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Success from "../Success";
+import Dialog from "@material-ui/core/Dialog";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 const NewPartner = () => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     partner_name: "",
     partner_email: "",
@@ -15,6 +17,11 @@ const NewPartner = () => {
     partner_website_url: "",
   });
   const [spin, setSpin] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSuccessClose = () => {
+    setSuccess(false);
+  }; 
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -23,17 +30,17 @@ const NewPartner = () => {
       [e.target.name]: value,
     });
   };
-  const notify = () => {
-    toast.success("Car Edited Successfully", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  // const notify = () => {
+  //   toast.success("Car Edited Successfully", {
+  //     position: "top-center",
+  //     autoClose: 5000,
+  //     hideProgressBar: true,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,15 +57,19 @@ const NewPartner = () => {
     axios
       .post("https://apigari.herokuapp.com/api/v1/newPartner", partnerData)
       .then((response) => {
-        notify();
-        window.location.reload(false);
+        setSuccess(true);
+        setSpin(false);
+        // notify();
+        // window.location.reload(false);
         console.log(response.status);
       });
   };
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <ToastContainer />
+      <Dialog open={success} onClose={handleSuccessClose}>
+        <Success />      
+      </Dialog>
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
           <div>

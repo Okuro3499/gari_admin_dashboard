@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Success from "../Success";
+import Dialog from "@material-ui/core/Dialog";
 
 const EditStaff = ({ staffId }) => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   const [staffDetails, setStaffDetails] = useState({
     staff_name: "",
     staff_email: "",
@@ -15,17 +14,22 @@ const EditStaff = ({ staffId }) => {
     staff_id: "",
   });
   const [spin, setSpin] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const notify = () => {
-    toast.success("Staff Edited Successfully", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  // const notify = () => {
+  //   toast.success("Staff Edited Successfully", {
+  //     position: "top-center",
+  //     autoClose: 5000,
+  //     hideProgressBar: true,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
+
+  const handleSuccessClose = () => {
+    setSuccess(false);
   };
 
   const handleEdit = (e) => {
@@ -39,15 +43,16 @@ const EditStaff = ({ staffId }) => {
       staff_mobile: staffDetails.staff_mobile,
       staff_id: staffDetails.staff_id,
     };
-
     axios
       .put(
         `https://apigari.herokuapp.com/api/v1/staff/edit/${staffId}`,
         staffEditData
       )
       .then((response) => {
-        notify();
-        window.location.reload(false);
+        setSuccess(true);
+        setSpin(false);
+        // notify();
+        // window.location.reload(false);
         console.log(response);
       });
   };
@@ -57,19 +62,19 @@ const EditStaff = ({ staffId }) => {
       .then((response) => response.json())
       .then(
         (data) => {
-          setLoading(false);
           setStaffDetails(data.staff_details);
         },
         (error) => {
-          setLoading(false);
-          setError(error);
+          // setError(error);
         }
       );
   }, [staffId]);
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <ToastContainer />I
+      <Dialog open={success} onClose={handleSuccessClose}>
+        <Success />      
+      </Dialog>
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
           <div>
@@ -186,7 +191,7 @@ const EditStaff = ({ staffId }) => {
         <button
           onClick={handleEdit}
           className="w-1/2 flex justify-end text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-3 py-2 text-center sm:w-auto"
-          disabled={loading}
+          disabled={spin}
         >
           {spin && (
             <div>
