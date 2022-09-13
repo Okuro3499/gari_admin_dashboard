@@ -138,36 +138,31 @@ function VehicleDetails(props) {
   };
 
   const handleFrom = (date) => {
-    setBooking({ ...booking, book_date_from: new Date(date._d).toISOString()});
+    setBooking({ ...booking, book_date_from: date._d});
     //   setDateFrom(date)
-    //   console.log(date);
+      console.log(date);
   };
-
+  console.log("start" + booking.book_date_from);
+  
   const handleTo = (date) => {
-    setBooking({ ...booking, book_date_to: new Date(date._d).toISOString()});
-    // setDateTo(date)
-    const startDate = moment(booking.book_date_from);
-    const timeEnd = moment(booking.book_date_to);
-    const diff = timeEnd.diff(startDate);
-    const diffDuration = moment.duration(diff);
-    const days = diffDuration.days();
-    setTotalDays(days || 0 );
-    setTotalAmount(days * carDetails.price || 0 )
+    setBooking({ ...booking, book_date_to: date._d});
     
-    // setBooking({ ...booking, total_days: days || 0 });
-    // setBooking({...booking, total_amount: booking.total_days * carDetails.price || 0});
-
-    // const startDate = moment(dateFrom);
-    // const timeEnd = moment(dateTo);
-    // const diff = timeEnd.diff(startDate);
-    // const diffDuration = moment.duration(diff);
-    // const days = diffDuration.days();
-    // setTotalDays(days || 0)
-    // setBooking({ ...booking, total_days: days});
-    // setBooking({ ...booking, total_amount: booking.total_days * carDetails.price});
-
-    // console.log(totalDays)
+    // setDateTo(date)
+    // setTimeout(() => {
+      const startDate = moment(booking.book_date_from);
+      const timeEnd = moment(booking.book_date_to);
+      const diff = timeEnd.diff(startDate);
+      const diffDuration = moment.duration(diff);
+      const days = diffDuration.days();
+      setTotalDays(days || 0 );
+      setTotalAmount(days * carDetails.price || 0 )
+      console.log("start" + startDate);
+      console.log("end" + timeEnd);
+      console.log("diff"+ days);
+    // }, 2000);
   };
+
+  console.log("end" + booking.book_date_to);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -178,8 +173,6 @@ function VehicleDetails(props) {
   };
 
   const handleBooking = (e) => {
-
-
     // setSpin(true);
     e.preventDefault();
     const bookingData = {
@@ -362,16 +355,16 @@ function VehicleDetails(props) {
                 </div>
 
                 <div className="flex justify-center h-screen text-gray-700 mb-20">
+                <div className="container mx-auto my-5 p-5">
+                <div className="md:flex md:-mx-2 ">
+                  
+                <div className="w-full md:w-9/12 mx-2">
                   <div className="flex w-full max-w-screen-lg">
                     <div className="flex flex-col flex-grow border-l border-r border-gray-300">
-                      <div
-                        ref={slideRef}
-                        className="w-full select-none relative mx-auto"
-                      >
+                      <div ref={slideRef} className="w-full select-none relative mx-auto">
                         {/* className="relative  " */}
                         <div className="slide relative">
-                          <img
-                            className="aspect-w-10 aspect-h-2 ml-6"
+                        <img className="w-full h-1/2 object-cover object-center"
                             src={
                               carImages[currentIndex].src ||
                               "https://via.placeholder.com/140x100?text=NO+IMAGE"
@@ -525,8 +518,9 @@ function VehicleDetails(props) {
                       </div>
                     </div>
                   </div>
+                  </div>
 
-                  <div className="flex flex-col flex-shrink-0 w-1/3 py-4 pl-4 mr-2">
+                  <div className="w-full md:w-3/12 md:mx-2">
                     <form>
                       <h1 className="underline font-bold mb-4">Booking</h1>
                       <div>
@@ -675,6 +669,8 @@ function VehicleDetails(props) {
                         {!spin && <span>Book</span>}
                       </button>
                     </form>
+                  </div>
+                  </div>
                   </div>
                 </div>
               </main>

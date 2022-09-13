@@ -12,6 +12,7 @@ import Vehicles from "./Pages/Vehicles";
 import VehicleDetails from "./Pages/VehicleDetails";
 import Bookings from "./Pages/Bookings";
 import Users from "./Pages/Users";
+import UserDetails from "./Pages/UserDetails";
 import Partners from "./Pages/Partners";
 import Staff from "./Pages/Staff";
 import VehicleTracking from "./Pages/VehicleTracking";
@@ -32,6 +33,7 @@ function App() {
           <Route path="/Partners" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<Partners />)} />
           <Route path="/Staff" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<Staff />)} />
           <Route path="/VehicleTracking" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<VehicleTracking />)} />
+          <Route path="/UserDetails" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<UserDetails />)} />
         </Routes>
       </Router>
       {/* <Footer />  */}
