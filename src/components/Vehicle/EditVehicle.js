@@ -304,7 +304,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="car_name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Car name
               </label>
               <input
@@ -314,14 +314,14 @@ const EditVehicle = ({ carId }) => {
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, car_name: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Car name"/>
             </div>
 
             <div>
               <label
                 htmlFor="status"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Status
               </label>
               <Select
@@ -334,7 +334,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="transmission"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Transmission
               </label>
               <Select
@@ -347,7 +347,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="engine"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Engine
               </label>
               <Select
@@ -360,11 +360,11 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="color"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Color
               </label>
               <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 type="text"
                 name="color"
                 value={carDetails.color}
@@ -377,11 +377,11 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="registration"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Registration
               </label>
               <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 type="text"
                 name="registration"
                 value={carDetails.registration}
@@ -394,11 +394,11 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="price"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Price
               </label>
               <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 type="text"
                 name="price"
                 value={carDetails.color}
@@ -412,11 +412,11 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="doors"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Doors
               </label>
               <input
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 type="text"
                 name="doors"
                 value={carDetails.color}
@@ -430,11 +430,11 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="passengers"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Passengers
               </label>
               <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 type="text"
                 name="passengers"
                 value={carDetails.passengers}
@@ -447,7 +447,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="drive"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                className="block mb-2 text-sm font-medium text-gray-900 ">
                 Drive
               </label>
               <Select
@@ -461,7 +461,7 @@ const EditVehicle = ({ carId }) => {
           <div className="mb-2">
             <label
               htmlFor="company"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              className="block mb-2 text-sm font-medium text-gray-900 ">
               Company Name
             </label>
             <input
@@ -471,14 +471,14 @@ const EditVehicle = ({ carId }) => {
               onChange={(e) =>
                 setCarDetails({ ...carDetails, company: e.target.value })
               }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Company Name"
             />
           </div>
 
           <div className="flex flex-col mx-auto mb-2">
             <div className="w-full px-3">
-              <div className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="block text-sm font-medium text-gray-900 ">
                 Attach Front View Image
               </div>
               <label>
@@ -521,7 +521,7 @@ const EditVehicle = ({ carId }) => {
 
           <div className="flex flex-col mx-auto mb-2">
             <div className="w-full px-3">
-              <div className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="block text-sm font-medium text-gray-900 ">
                 Attach Back View Image
               </div>
               <label>
@@ -564,7 +564,7 @@ const EditVehicle = ({ carId }) => {
 
           <div className="flex flex-col mx-auto mb-2">
             <div className="w-full px-3">
-              <div className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="block text-sm font-medium text-gray-900 ">
                 Attach Right Side View Image
               </div>
               <label>
@@ -607,7 +607,7 @@ const EditVehicle = ({ carId }) => {
 
           <div className="flex flex-col mx-auto mb-2">
             <div className="w-full px-3">
-              <div className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="block text-sm font-medium text-gray-900 ">
                 Attach Left Side View Image
               </div>
               <label>
@@ -650,7 +650,7 @@ const EditVehicle = ({ carId }) => {
 
           <div className="flex flex-col mx-auto mb-2">
             <div className="w-full px-3">
-              <div className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="block text-sm font-medium text-gray-900 ">
                 Attach Interior View Image (1)
               </div>
               <label>
@@ -693,7 +693,7 @@ const EditVehicle = ({ carId }) => {
 
           <div className="flex flex-col mx-auto mb-2">
             <div className="w-full px-3">
-              <div className="block text-sm font-medium text-gray-900 dark:text-gray-300">
+              <div className="block text-sm font-medium text-gray-900 ">
                 Attach Interior View Image (2)
               </div>
               <label>
@@ -738,7 +738,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="feature_1"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium text-gray-900 "
               >
                 Feature 1
               </label>
@@ -749,7 +749,7 @@ const EditVehicle = ({ carId }) => {
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, feature_1: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Feature 1"
               />
             </div>
@@ -757,7 +757,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="feature_2"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium text-gray-900 "
               >
                 Feature 2
               </label>
@@ -768,7 +768,7 @@ const EditVehicle = ({ carId }) => {
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, feature_2: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Feature 2"
               />
             </div>
@@ -776,7 +776,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="feature_3"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium text-gray-900 "
               >
                 Feature 3
               </label>
@@ -787,7 +787,7 @@ const EditVehicle = ({ carId }) => {
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, feature_3: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Feature 3"
               />
             </div>
@@ -795,7 +795,7 @@ const EditVehicle = ({ carId }) => {
             <div>
               <label
                 htmlFor="feature_4"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium text-gray-900 "
               >
                 Feature 4
               </label>
@@ -806,7 +806,7 @@ const EditVehicle = ({ carId }) => {
                 onChange={(e) =>
                   setCarDetails({ ...carDetails, feature_4: e.target.value })
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Feature 4"
               />
             </div>
@@ -815,7 +815,7 @@ const EditVehicle = ({ carId }) => {
           <div className="mb-4">
             <label
               htmlFor="feature_5"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 "
             >
               Feature 5
             </label>
@@ -826,7 +826,7 @@ const EditVehicle = ({ carId }) => {
               onChange={(e) =>
                 setCarDetails({ ...carDetails, feature_5: e.target.value })
               }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Feature 5"
             />
           </div>

@@ -57,7 +57,7 @@ const NewStaff = () => {
           <div>
             <label
               htmlFor="company_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              className="block mb-2 text-sm font-medium text-gray-900 ">
               Staff name
             </label>
             <input
@@ -65,14 +65,14 @@ const NewStaff = () => {
               name="staff_name"
               value={data.staff_name}
               onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="John"
               required/>
           </div>
           <div>
             <label
               htmlFor="phone"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              className="block mb-2 text-sm font-medium text-gray-900 ">
               Phone number
             </label>
             <input
@@ -80,7 +80,7 @@ const NewStaff = () => {
               name="staff_mobile"
               value={data.staff_mobile}
               onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="123-45-678"
               pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
               required/>
@@ -88,7 +88,7 @@ const NewStaff = () => {
           <div>
             <label
               htmlFor="idNumber"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              className="block mb-2 text-sm font-medium text-gray-900 ">
               Id Number
             </label>
             <input
@@ -96,7 +96,7 @@ const NewStaff = () => {
               name="staff_id_number"
               value={data.staff_id_number}
               onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="12345678"
               required/>
           </div>
@@ -104,7 +104,7 @@ const NewStaff = () => {
           <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              className="block mb-2 text-sm font-medium text-gray-900 ">
               Email address
             </label>
             <input
@@ -112,7 +112,7 @@ const NewStaff = () => {
               name="staff_email"
               value={data.staff_email}
               onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="john.doe@company.com"
               required/>
           </div>
@@ -121,7 +121,7 @@ const NewStaff = () => {
         <div className="mb-4">
           <label
             htmlFor="position"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            className="block mb-2 text-sm font-medium text-gray-900 ">
             Position
           </label>
           <input
@@ -129,7 +129,7 @@ const NewStaff = () => {
             name="staff_position"
             value={data.staff_position}
             onChange={handleChange}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Staff"
             required/>
         </div>

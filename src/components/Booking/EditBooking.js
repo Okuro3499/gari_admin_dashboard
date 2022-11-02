@@ -138,29 +138,29 @@ const EditBooking = ({ bookingId }) => {
       </Dialog>
       <form>
         <div className="mb-2">
-          <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+          <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 ">
             Car Name
           </label>
-          <input value={bookingDetails.car_name} onChange={(e) => setBookingDetails({...bookingDetails, car_name: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Car Name" type="text" name="carName" />
+          <input value={bookingDetails.car_name} onChange={(e) => setBookingDetails({...bookingDetails, car_name: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Car Name" type="text" name="carName" />
         </div>
 
         <div className="mb-2">
-          <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+          <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 ">
             Client Name
           </label>
-          <input value={bookingDetails.client_name} onChange={(e) => setBookingDetails({...bookingDetails, client_name: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Client Name" type="text" name="clientName" />
+          <input value={bookingDetails.client_name} onChange={(e) => setBookingDetails({...bookingDetails, client_name: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Client Name" type="text" name="clientName" />
         </div>
 
         <div>
           <div className="grid gap-4 mb-4 lg:grid-cols-2">
             <div>
-              <label htmlFor="dateFrom" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <label htmlFor="dateFrom" className="block mb-2 text-sm font-medium text-gray-900 ">
                 Date From
               </label>
               <DatePicker  
                 value={bookingDetails.book_date_from} 
                 onChange={handleFrom}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " 
                 label="from" 
                 timeFormat={false} 
                 isValidDate={disableFromDt} 
@@ -170,13 +170,13 @@ const EditBooking = ({ bookingId }) => {
             </div>
 
             <div>
-              <label htmlFor="to" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <label htmlFor="to" className="block mb-2 text-sm font-medium text-gray-900 ">
                 To Date:
               </label>
               <DatePicker
                 value={bookingDetails.book_date_to}
                 onChange={handleTo}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 label="to"
                 timeFormat={false}
                 isValidDate={disableToDt}
@@ -187,7 +187,7 @@ const EditBooking = ({ bookingId }) => {
             </div>
           </div>
           <div className="mb-2">
-            <label htmlFor="drive" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <label htmlFor="drive" className="block mb-2 text-sm font-medium text-gray-900 ">
               Drive
             </label>
             <Select
@@ -198,19 +198,19 @@ const EditBooking = ({ bookingId }) => {
           </div>
 
           <div className="mb-2">
-            <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 ">
               Destination
             </label>
-            <input value={bookingDetails.destination} onChange={(e) => setBookingDetails({...bookingDetails, destination: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Client Name" type="text" name="clientName" />
+            <input value={bookingDetails.destination} onChange={(e) => setBookingDetails({...bookingDetails, destination: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Client Name" type="text" name="clientName" />
           </div> 
 
           
           <div className="grid gap-4 mb-4 lg:grid-cols-2 mt-2">
-            <label htmlFor="totalDays" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <label htmlFor="totalDays" className="block mb-2 text-sm font-medium text-gray-900 ">
               Total Days: <span>{bookingDetails.total_days}</span>
             </label>
             
-            <label htmlFor="totalAmount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <label htmlFor="totalAmount" className="block mb-2 text-sm font-medium text-gray-900 ">
               Total Amount to Pay: <span>{bookingDetails.total_amount}</span>
             </label>
           </div>

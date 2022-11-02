@@ -541,7 +541,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="car_name"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               Car name
                             </label>
@@ -558,7 +558,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="drive"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               Client
                             </label>
@@ -575,7 +575,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="drive"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               Drive
                             </label>
@@ -591,7 +591,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="from"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               From Date:
                             </label>
@@ -612,7 +612,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="to"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               To Date:
                             </label>
@@ -633,7 +633,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="to"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               Total Days: <span>{totalDays}</span>
                             </label>
@@ -642,7 +642,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="to"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               Total Amount to Pay:
                               <span>{totalAmount}</span>
@@ -652,7 +652,7 @@ function VehicleDetails(props) {
                           <div>
                             <label
                               htmlFor="destination"
-                              className="block mb-2 text-sm font-medium text-black dark:text-black"
+                              className="block mb-2 text-sm font-medium text-black "
                             >
                               Destination
                             </label>

@@ -80,7 +80,7 @@ const EditStaff = ({ staffId }) => {
           <div>
             <label
               htmlFor="company_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 "
             >
               Staff name
             </label>
@@ -91,7 +91,7 @@ const EditStaff = ({ staffId }) => {
               onChange={(e) =>
                 setStaffDetails({ ...staffDetails, staff_name: e.target.value })
               }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="John"
               required
             />
@@ -99,7 +99,7 @@ const EditStaff = ({ staffId }) => {
           <div>
             <label
               htmlFor="phone"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 "
             >
               Phone number
             </label>
@@ -113,7 +113,7 @@ const EditStaff = ({ staffId }) => {
                   staff_mobile: e.target.value,
                 })
               }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="123-45-678"
               pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
               required
@@ -122,7 +122,7 @@ const EditStaff = ({ staffId }) => {
           <div>
             <label
               htmlFor="idNumber"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 "
             >
               Id Number
             </label>
@@ -136,7 +136,7 @@ const EditStaff = ({ staffId }) => {
                   staff_id_number: e.target.value,
                 })
               }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="12345678"
               required
             />
@@ -145,7 +145,7 @@ const EditStaff = ({ staffId }) => {
           <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 "
             >
               Email address
             </label>
@@ -159,7 +159,7 @@ const EditStaff = ({ staffId }) => {
                   staff_email: e.target.value,
                 })
               }
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="john.doe@company.com"
               required
             />
@@ -169,7 +169,7 @@ const EditStaff = ({ staffId }) => {
         <div className="mb-4">
           <label
             htmlFor="position"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium text-gray-900 "
           >
             Position
           </label>
@@ -183,7 +183,7 @@ const EditStaff = ({ staffId }) => {
                 staff_position: e.target.value,
               })
             }
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Staff"
             required
           />
