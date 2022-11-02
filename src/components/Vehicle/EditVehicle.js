@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
 import Success from "../Success";
-import Dialog from "@material-ui/core/Dialog";
+// import Dialog from "@material-ui/core/Dialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -294,9 +294,9 @@ const EditVehicle = ({ carId }) => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <Dialog open={success} onClose={handleSuccessClose}>
+      {/* <Dialog open={success} onClose={handleSuccessClose}>
         <Success />      
-      </Dialog>
+      </Dialog> */}
       <ToastContainer/>
       <form>
         <div>

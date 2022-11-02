@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { BallTriangle } from "react-loader-spinner";
 import { useLocation } from "react-router-dom";
-import Dialog from "@material-ui/core/Dialog";
+// import Dialog from "@material-ui/core/Dialog";
 import Cookies from "js-cookie";
 import Select from "react-select";
 import DatePicker from "react-datetime";
@@ -292,7 +292,7 @@ function VehicleDetails(props) {
     return (
       <div>
         <SideBar />
-        <Dialog open={openConfirmationDialog} onClose={closeConfirmation}>
+        {/* <Dialog open={openConfirmationDialog} onClose={closeConfirmation}>
           <div className="items-center justify-center space-y-6 bg-gray-100 sm:flex-row sm:space-x-6 sm:space-y-0">
             <div className="w-full max-w-sm overflow-hidden rounded-lg px-10 bg-white shadow-md ">
               <svg
@@ -323,7 +323,7 @@ function VehicleDetails(props) {
               </div>
             </div>
           </div>
-        </Dialog>
+        </Dialog> */}
         <div className="flex overflow-hidden bg-white pt-16">
           <div
             className="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
@@ -438,13 +438,13 @@ function VehicleDetails(props) {
                                 Edit Vehicle
                               </button>
 
-                              <Dialog
+                              {/* <Dialog
                                 open={openAddCarDialog}
                                 onClose={handleClose}
                               >
-                                <EditVehicle carId={carDetails.car_id} />
+                                <EditVehicle carId={carDetails.car_id} /> */}
                                 {/* carId={carImages.car_id} */}
-                              </Dialog>
+                              {/* </Dialog> */}
                             </div>
                             {/* </div> */}
 

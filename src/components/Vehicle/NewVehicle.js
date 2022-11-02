@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Select from "react-select";
 import Success from "../Success";
-import Dialog from "@material-ui/core/Dialog";
+// import Dialog from "@material-ui/core/Dialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -286,9 +286,9 @@ const NewVehicle = ({ props }) => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <Dialog open={success} onClose={handleSuccessClose}>
+      {/* <Dialog open={success} onClose={handleSuccessClose}>
         <Success />      
-      </Dialog>
+      </Dialog> */}
       <ToastContainer />
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">

@@ -6,7 +6,7 @@ import DatePicker from "react-datetime";
 import moment from "moment";
 import "react-datetime/css/react-datetime.css";
 import Success from "../Success";
-import Dialog from "@material-ui/core/Dialog";
+// import Dialog from "@material-ui/core/Dialog";
 
 const EditBooking = ({ bookingId }) => {
   // const [error, setError] = useState(null);
@@ -133,9 +133,9 @@ const EditBooking = ({ bookingId }) => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <Dialog open={success} onClose={handleSuccessClose}>
+      {/* <Dialog open={success} onClose={handleSuccessClose}>
         <Success />      
-      </Dialog>
+      </Dialog> */}
       <form>
         <div className="mb-2">
           <label htmlFor="carName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
