@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BallTriangle } from "react-loader-spinner";
-// import Dialog from "@material-ui/core/Dialog";
+import Dialog from '@mui/material/Dialog';
 import { Link } from "react-router-dom";
 import NewVehicle from "../components/Vehicle/NewVehicle";
 import SideBar from "../components/SideBar";
@@ -98,9 +98,9 @@ function Vehicles() {
                           Add Vehicle
                         </button>
 
-                        {/* <Dialog open={openAddCarDialog} onClose={handleClose}>
+                        <Dialog open={openAddCarDialog} onClose={handleClose}>
                           <NewVehicle />
-                        </Dialog> */}
+                        </Dialog>
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import Dialog from "@material-ui/core/Dialog";
+import Dialog from '@mui/material/Dialog';
 import { BallTriangle } from "react-loader-spinner";
 import SideBar from "../components/SideBar";
 import Cookies from "js-cookie";
@@ -96,9 +96,9 @@ function Bookings() {
     return (
       <div>
         <SideBar />
-        {/* <Dialog open={openAddBookingDialog} onClose={handleClose}>
+        <Dialog open={openAddBookingDialog} onClose={handleClose}>
           <EditBooking bookingId={bookingId} />
-        </Dialog> */}
+        </Dialog>
         <div className="flex overflow-hidden bg-white pt-16">
           <div className="bg-gray-900 opacity-50 hidden fixed inset-0 z-10" id="sidebarBackdrop"/>
           {loading ? (

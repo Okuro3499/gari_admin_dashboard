@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import Dialog from "@material-ui/core/Dialog";
+import Dialog from '@mui/material/Dialog';
 import { BallTriangle } from "react-loader-spinner";
 import EditStaff from "../components/Staff/EditStaff";
 import NewStaff from "../components/Staff/NewStaff";
@@ -105,9 +105,9 @@ function Staff() {
                         </svg>
                         Add staff
                       </button>
-                      {/* <Dialog open={openAddStaffDialog} onClose={handleClose}>
+                      <Dialog open={openAddStaffDialog} onClose={handleClose}>
                         {editable ? (<EditStaff staffId={staffId} />) : (<NewStaff />)}
-                      </Dialog> */}
+                      </Dialog>
 
                       <a href="/" className="w-1/2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
                         <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

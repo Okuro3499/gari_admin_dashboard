@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Success from "../Success";
+import Dialog from '@mui/material/Dialog';
 // import Dialog from "@material-ui/core/Dialog";
 
 const NewStaff = () => {
@@ -48,9 +49,9 @@ const NewStaff = () => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      {/* <Dialog open={success} onClose={handleSuccessClose}>
+      <Dialog open={success} onClose={handleSuccessClose}>
         <Success />      
-      </Dialog> */}
+      </Dialog>
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
           <div>
