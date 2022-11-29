@@ -5,11 +5,13 @@ import EditPartner from "../components/Partners/EditPartner";
 import NewPartner from "../components/Partners/NewPartner";
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 function Partners() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [partners, setPartners] = useState([]);
+  const [userPartners, setUserPartners] = useState([]);
   const [openAddPartnerDialog, setOpenAddPartnerDialog] = useState(false);
   const [editable, setEditable] = useState(false);
   const [partnerId, setPartnerId] = useState(null);
@@ -22,23 +24,56 @@ function Partners() {
   const handleClose = () => {
     setOpenAddPartnerDialog(false);
   };
-  
+
   useEffect(() => {
-    fetch("https://apigari.herokuapp.com/api/v1/partners")
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setPartners(data.partners);
-          console.log(data.partners);
+    const api = `https://apigari.herokuapp.com/api/v1/users/role/3`
+    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
+        .then(res => {
+            console.log(res.data.role_user);
+            setLoading(false);
+            setUserPartners(res.data.role_user);
+        // this.setState({
+        //     items: res.data,  /*set response data in items array*/
+        //     isLoaded : true,
+        //     redirectToReferrer: false
+        // })
         },
         (error) => {
           setLoading(false);
           setError(error);
-        }
-      );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        })
+    
+    // fetch({`https://apigari.herokuapp.com/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
+      // .then((response) => response.json())
+      // .then(
+      //   (data) => {
+      //     setLoading(false);
+      //     // setuserPartners(data.clients);
+      //     console.log(data);
+      //   },
+      //   (error) => {
+      //     setLoading(false);
+      //     setError(error);
+      //   }
+      // );
   }, []);
+  
+  // useEffect(() => {
+  //   fetch("https://apigari.herokuapp.com/api/v1/partners")
+  //     .then((response) => response.json())
+  //     .then(
+  //       (data) => {
+  //         setLoading(false);
+  //         setPartners(data.partners);
+  //         console.log(data.partners);
+  //       },
+  //       (error) => {
+  //         setLoading(false);
+  //         setError(error);
+  //       }
+  //     );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -150,15 +185,15 @@ function Partners() {
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                          {partners.filter((partner) => {
+                          {userPartners.filter((userPartner) => {
                               if (searchTerm === "") {
-                                return partner;
-                              } else if (partner.partner_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return partner;
-                              } else if (partner.partner_email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return partner;
-                              }}).map((partner) => (
-                            <tr className="hover:bg-gray-100" key={partner.partner_id}>
+                                return userPartner;
+                              } else if (userPartner.partner_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                return userPartner;
+                              } else if (userPartner.partner_email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                return userPartner;
+                              }}).map((userPartner) => (
+                            <tr className="hover:bg-gray-100" key={userPartner.user_id}>
                               <td className="p-4 w-4"> 
                                 <div className="flex items-center">
                                   <input id="checkbox-1" aria-describedby="checkbox-1" type="checkbox" className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"/>
@@ -170,18 +205,18 @@ function Partners() {
                               <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-2 lg:mr-0">
                                 <div className="text-sm font-normal text-gray-500">
                                   <div className="text-base font-semibold text-gray-900">
-                                    {partner.partner_name}
+                                    {userPartner.first_name + " " + userPartner.last_name}
                                   </div>
                                   <div className="text-sm font-normal text-gray-500">
-                                    {partner.partner_email}
+                                  {userPartner.email}
                                   </div>
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {partner.partner_physical_address}
+                                {userPartner.partner_physical_address}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {"+254" + partner.partner_mobile}
+                              {"+254" + userPartner.mobile}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                 <div className="flex items-center">
@@ -190,7 +225,7 @@ function Partners() {
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
-                                <button type="button" onClick={() => { handleClickOpen(); setEditable(true); setPartnerId(partner.partner_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <button type="button" onClick={() => { handleClickOpen(); setEditable(true); setPartnerId(userPartner.user_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                     <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>

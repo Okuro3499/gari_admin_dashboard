@@ -2,28 +2,47 @@ import React, { useState, useEffect } from "react";
 import { BallTriangle } from "react-loader-spinner";
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 function Users() {
   const [error, setError] = useState(null);
   // const [isLoaded, setIsLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [clients, setClients] = useState([]);
+  const [userClients, setUserClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("https://apigari.herokuapp.com/api/v1/clients")
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setClients(data.clients);
-          console.log(data.clients);
+    const api = `https://apigari.herokuapp.com/api/v1/users/role/2`
+    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
+        .then(res => {
+            console.log(res.data.role_user);
+            setLoading(false);
+          setUserClients(res.data.role_user);
+        // this.setState({
+        //     items: res.data,  /*set response data in items array*/
+        //     isLoaded : true,
+        //     redirectToReferrer: false
+        // })
         },
         (error) => {
           setLoading(false);
           setError(error);
-        }
-      );
+        })
+    
+    // fetch({`https://apigari.herokuapp.com/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
+      // .then((response) => response.json())
+      // .then(
+      //   (data) => {
+      //     setLoading(false);
+      //     // setUserClients(data.clients);
+      //     console.log(data);
+      //   },
+      //   (error) => {
+      //     setLoading(false);
+      //     setError(error);
+      //   }
+      // );
   }, []);
 
   if (error) {
@@ -133,18 +152,18 @@ function Users() {
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {clients.filter((client)=> {
+                            {userClients.filter((userClient)=> {
                               if (searchTerm === ""){
-                                return client
-                              } else if (client.first_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return client
-                              } else if (client.last_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return client
-                              } else if (client.transmission.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return client
+                                return userClient
+                              } else if (userClient.first_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                                return userClient
+                              } else if (userClient.last_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                                return userClient
+                              } else if (userClient.transmission.toLowerCase().includes(searchTerm.toLowerCase())){
+                                return userClient
                               }
-                            }).map((client) => (
-                            <tr className="hover:bg-gray-100" key={client.client_id}>
+                            }).map((userClient) => (
+                            <tr className="hover:bg-gray-100" key={userClient.user_id}>
                               <td className="p-4 w-4">
                                 <div className="flex items-center">
                                   <input id="checkbox-1" aria-describedby="checkbox-1" type="checkbox" className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"/>
@@ -154,21 +173,21 @@ function Users() {
                                   </div>
                                 </td>
                                 <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
-                                  <img className="h-10 w-10 rounded-full" src={client.user_photo_url || require('../profileIcon.jpg')} alt="User"/>
+                                  <img className="h-10 w-10 rounded-full" src={userClient.user_photo_url || require('../profileIcon.jpg')} alt={userClient.first_name}/>
                                   <div className="text-sm font-normal text-gray-500">
                                     <div className="text-base font-semibold text-gray-900">
-                                      {client.first_name + " " + client.last_name}
+                                      {userClient.first_name + " " + userClient.last_name}
                                     </div>
                                     <div className="text-sm font-normal text-gray-500">
-                                      {client.email}
+                                      {userClient.email}
                                     </div>
                                   </div>
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                  {"+254" + client.mobile}
+                                  {"+254" + userClient.mobile}
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                  {client.district}
+                                  {userClient.district}
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                   <div className="flex items-center">
@@ -188,7 +207,7 @@ function Users() {
                                       <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
                                     </svg>
                                   </button>
-                                  <Link to="/UserDetails" state={{ data: client.client_id }} className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                  <Link to="/UserDetails" state={{ userId: userClient.user_id, roleId: userClient.role_id }} className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" d="M.2 10a11 11 0 0 1 19.6 0A11 11 0 0 1 .2 10zm9.8 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" clipRule="evenodd"/>
                                     </svg>

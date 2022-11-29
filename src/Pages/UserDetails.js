@@ -2,49 +2,70 @@ import React, { useState, useEffect } from "react";
 import { BallTriangle } from "react-loader-spinner";
 import { useLocation } from "react-router-dom";
 import SideBar from "../components/SideBar";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 function UserDetails(props) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [clientDetails, setClientDetails] = useState({
-    client_id: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    mobile: "",
-    county: "",
-    district: "",
-    estate: "",
-    landmark: "",
-    driver_licence_url: "",
-    national_id_url: "",
-    user_photo_url: "",
-    contact1_name: "",
-    contact1_relationship: "",
-    contact1_mobile: "",
-    contact2_name: "",
-    contact2_relationship: "",
-    contact2_mobile: "",
+  const [userClientDetails, setUserClientDetails] = useState({
+        user_id: "",
+        role_id: "",
+        first_name: "",
+        last_name: "",
+        email: "",
+        mobile: "",
+        county: "",
+        district: "",
+        estate: "",
+        landmark: "",
+        driver_licence_url: "",
+        national_id_url: "",
+        user_photo_url: "",
+        contact1_name: "",
+        contact1_relationship: "", 
+        contact1_mobile: "", 
+        contact2_name: "", 
+        contact2_relationship: "", 
+        contact2_mobile: "", 
+        partner_physical_address: "", 
+        postal_address: "", 
+        url: "", 
+        role_name: "", 
+        role_description: "", 
+        created_by: "", 
+        created_on: "", 
+        modified_by: "", 
+        last_modified_on: "",
   });
 
   const location = useLocation();
-  const data = location.state?.data;
+  const userId = location.state?.userId;
+  const roleId = location.state?.roleId;
 
   useEffect(() => {
-    fetch(`https://apigari.herokuapp.com/api/v1/client/${data}`)
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setClientDetails(data.single_client);
-          console.log(data.single_client);
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        }
-      );
+    const api = `https://apigari.herokuapp.com/api/v1/users/userDetails/${userId}/${roleId}`
+    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
+    // fetch(`https://apigari.herokuapp.com/api/v1/client/${userId}/${roleId}`)
+      // .then((response) => response.json())
+      .then(res => {
+        console.log(res.data.single_user);
+        setLoading(false);
+      setUserClientDetails(res.data.single_user);
+      // .then(
+      //   (data) => {
+      //     setLoading(false);
+      //     setClientDetails(data.single_user);
+      //     console.log(data.single_user);
+      //   },
+      //   (error) => {
+      //     setLoading(false);
+      //     setError(error);
+      //   }
+      // );
   });
+}, []);
+let memberFrom = new Date(userClientDetails.created_on).toLocaleDateString("en-GB", {month: "2-digit",day: "2-digit",year: "numeric"});
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -62,6 +83,7 @@ function UserDetails(props) {
               </div>
             </div>
           ) : (
+            
             <div id="main-content" className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64">
               <div className="container mx-auto my-5 p-5">
                 <div className="md:flex md:-mx-2 ">
@@ -71,11 +93,11 @@ function UserDetails(props) {
                     <div className="bg-white p-3 border-t-4 border-green-400">
                       <img
                         className="mb-3 w-32 h-32 rounded-full shadow-lg mx-auto"
-                        src={clientDetails.user_photo_url || require("../profileIcon.jpg")}
-                        alt={clientDetails.first_name + " " + clientDetails.last_name}
+                        src={userClientDetails.user_photo_url || require("../profileIcon.jpg")}
+                        alt={userClientDetails.first_name + " " + userClientDetails.last_name}
                       />
                       <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">
-                        {clientDetails.first_name + " " + clientDetails.last_name}
+                        {userClientDetails.first_name + " " + userClientDetails.last_name}
                       </h1>
 
                       <ul className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
@@ -89,7 +111,15 @@ function UserDetails(props) {
                         </li>
                         <li className="flex items-center py-3">
                           <span>Member since</span>
-                          <span className="ml-auto">Nov 07, 2016</span>
+                          <span className="ml-auto">
+                            {memberFrom}
+                          </span>
+                        </li>
+                        <li className="flex items-center py-3">
+                          <span>Created by:</span>
+                          <span className="ml-auto">
+                            {userClientDetails.created_by}
+                          </span>
                         </li>
                       </ul>
                     </div>
@@ -115,77 +145,77 @@ function UserDetails(props) {
                             <div className="px-4 py-2 font-semibold">
                               First Name
                             </div>
-                            <div className="px-4 py-2">
-                              {clientDetails.first_name}
+                            <div className="px-2 py-2">
+                              {userClientDetails.first_name}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Last Name
                             </div>
-                            <div className="px-4 py-2">
-                              {clientDetails.last_name}
+                            <div className="px-2 py-2">
+                              {userClientDetails.last_name}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Gender
                             </div>
-                            <div className="px-4 py-2">Female</div>
+                            <div className="px-2 py-2">Female</div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Contact No.
                             </div>
-                            <div className="px-4 py-2">
-                              {"+254" + clientDetails.mobile}
+                            <div className="px-2 py-2">
+                              {"+254" + userClientDetails.mobile}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               County
                             </div>
-                            <div className="px-4 py-2">
-                              {clientDetails.county}
+                            <div className="px-2 py-2">
+                              {userClientDetails.county}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               District
                             </div>
-                            <div className="px-4 py-2">
-                              {clientDetails.district}
+                            <div className="px-2 py-2">
+                              {userClientDetails.district}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Estate
                             </div>
-                            <div className="px-4 py-2">
-                              {clientDetails.estate}
+                            <div className="px-2 py-2">
+                              {userClientDetails.estate}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Landmark
                             </div>
-                            <div className="px-4 py-2">
-                              {clientDetails.landmark}
+                            <div className="px-2 py-2">
+                              {userClientDetails.landmark}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Email.
                             </div>
-                            <div className="px-4 py-2">
-                                {clientDetails.email}
+                            <div className="px-2 py-2">
+                                {userClientDetails.email}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
                             <div className="px-4 py-2 font-semibold">
                               Birthday
                             </div>
-                            <div className="px-4 py-2">Feb 06, 1998</div>
+                            <div className="px-2 py-2">Feb 06, 1998</div>
                           </div>
                         </div>
                       </div>
@@ -212,7 +242,7 @@ function UserDetails(props) {
                               First Contact Name
                             </div>
                             <div className="px-4 py-2">
-                              {clientDetails.contact1_name}
+                              {userClientDetails.contact1_name}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
@@ -220,7 +250,7 @@ function UserDetails(props) {
                               Relationship
                             </div>
                             <div className="px-4 py-2">
-                              {clientDetails.contact1_relationship}
+                              {userClientDetails.contact1_relationship}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
@@ -228,7 +258,7 @@ function UserDetails(props) {
                               Phone Number:
                             </div>
                             <div className="px-4 py-2">
-                              {clientDetails.contact1_mobile}
+                              {userClientDetails.contact1_mobile}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
@@ -240,7 +270,7 @@ function UserDetails(props) {
                               Second Contact Name
                             </div>
                             <div className="px-4 py-2">
-                              {clientDetails.contact2_name}
+                              {userClientDetails.contact2_name}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
@@ -248,7 +278,7 @@ function UserDetails(props) {
                               Relationship
                             </div>
                             <div className="px-4 py-2">
-                              {clientDetails.contact2_relationship}
+                              {userClientDetails.contact2_relationship}
                             </div>
                           </div>
                           <div className="grid grid-cols-2">
@@ -256,7 +286,7 @@ function UserDetails(props) {
                               Phone Number:
                             </div>
                             <div className="px-4 py-2">
-                              {clientDetails.contact2_mobile}
+                              {userClientDetails.contact2_mobile}
                             </div>
                           </div>
                         </div>
@@ -283,7 +313,7 @@ function UserDetails(props) {
                           <div className="bg-white p-3 border-t-4 border-cyan-600">
                             <div className="flex items-center">
                               <img className="w-56 h-52 rounded-md object-fill"
-                                src={clientDetails.driver_licence_url || require("../NoImage.png")}
+                                src={userClientDetails.driver_licence_url || require("../NoImage.png")}
                                 alt="drivers License"
                               />
                             </div>
@@ -303,7 +333,7 @@ function UserDetails(props) {
                           <div className="bg-white p-3 border-t-4 border-cyan-600">
                             <div className="flex items-center">
                               <img className="w-56 h-52 rounded-md object-fill"
-                                src={clientDetails.national_id_url || require("../NoImage.png")} alt="national id"
+                                src={userClientDetails.national_id_url || require("../NoImage.png")} alt="national id"
                               />
                             </div>
                           </div>

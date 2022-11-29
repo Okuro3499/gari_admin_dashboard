@@ -5,41 +5,76 @@ import EditStaff from "../components/Staff/EditStaff";
 import NewStaff from "../components/Staff/NewStaff";
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 function Staff() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [staffs, setStaffs] = useState([]);
-  const [openAddStaffDialog, setOpenAddStaffialog] = useState(false);
+  const [userStaffs, setUserStaffs] = useState([]);
+  const [openAddStaffDialog, setOpenAddStaffDialog] = useState(false);
   const [editable, setEditable] = useState(false);
   const [staffId, setStaffId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleClickOpen = () => {
-    setOpenAddStaffialog(true);
+    setOpenAddStaffDialog(true);
   };
 
   const handleClose = () => {
-    setOpenAddStaffialog(false);
+    setOpenAddStaffDialog(false);
   };
 
   useEffect(() => {
-    fetch("https://apigari.herokuapp.com/api/v1/staff")
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setStaffs(data.staff);
-          console.log(data.staff);
+    const api = `https://apigari.herokuapp.com/api/v1/users/role/4`
+    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
+        .then(res => {
+            console.log(res.data.role_user);
+            setLoading(false);
+            setUserStaffs(res.data.role_user);
+        // this.setState({
+        //     items: res.data,  /*set response data in items array*/
+        //     isLoaded : true,
+        //     redirectToReferrer: false
+        // })
         },
         (error) => {
           setLoading(false);
           setError(error);
-        }
-      );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        })
+    
+    // fetch({`https://apigari.herokuapp.com/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
+      // .then((response) => response.json())
+      // .then(
+      //   (data) => {
+      //     setLoading(false);
+      //     // setuserStaffs(data.clients);
+      //     console.log(data);
+      //   },
+      //   (error) => {
+      //     setLoading(false);
+      //     setError(error);
+      //   }
+      // );
   }, []);
+
+  // useEffect(() => {
+  //   fetch("https://apigari.herokuapp.com/api/v1/staff")
+  //     .then((response) => response.json())
+  //     .then(
+  //       (data) => {
+  //         setLoading(false);
+  //         setStaffs(data.staff);
+  //         console.log(data.staff);
+  //       },
+  //       (error) => {
+  //         setLoading(false);
+  //         setError(error);
+  //       }
+  //     );
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -152,15 +187,15 @@ function Staff() {
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                          {staffs.filter((staff) => {
+                          {userStaffs.filter((userStaff) => {
                               if (searchTerm === "") {
-                                return staff;
-                              } else if (staff.staff_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return staff;
-                              } else if (staff.staff_email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return staff;
-                              }}).map((staff) => (
-                            <tr className="hover:bg-gray-100" key={staff.staff_id}>
+                                return userStaff;
+                              } else if (userStaff.first_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                                return userStaff
+                              } else if (userStaff.last_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                                return userStaff
+                              }}).map((userStaff) => (
+                            <tr className="hover:bg-gray-100" key={userStaff.user_id}>
                               <td className="p-4 w-4">
                                 <div className="flex items-center">
                                   <input id="checkbox-1" aria-describedby="checkbox-1" type="checkbox" className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"/>
@@ -170,21 +205,21 @@ function Staff() {
                                 </div>
                               </td>
                               <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
-                                <img className="h-10 w-10 rounded-full" src="https://demo.themesberg.com/windster/images/users/neil-sims.png" alt="Neil" />
+                                <img className="h-10 w-10 rounded-full" src={userStaff.user_photo_url || require('../profileIcon.jpg')} alt={userStaff.first_name}/>
                                 <div className="text-sm font-normal text-gray-500">
                                   <div className="text-base font-semibold text-gray-900">
-                                    {staff.staff_name}
+                                  {userStaff.first_name + " " + userStaff.last_name}
                                   </div>
                                   <div className="text-sm font-normal text-gray-500">
-                                    {staff.staff_email}
+                                    {userStaff.staff_email}
                                   </div>
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {staff.staff_position}
+                                {userStaff.staff_position}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {"+254" + staff.staff_mobile}
+                                {"+254" + userStaff.staff_mobile}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                 <div className="flex items-center">
@@ -193,7 +228,7 @@ function Staff() {
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
-                                <button type="button" onClick={() => {handleClickOpen(staff.staff_id); setEditable(true); setStaffId(staff.staff_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <button type="button" onClick={() => {handleClickOpen(userStaff.user_id); setEditable(true); setStaffId(userStaff.user_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                     <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>

@@ -42,6 +42,10 @@ function VehicleDetails(props) {
     feature_3: "",
     feature_4: "",
     feature_5: "",
+    created_by: "",
+    created_on: "",
+    modified_by: "",
+    last_modified_on: ""
   });
   const [booking, setBooking] = useState({
     car_id: "",

@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import Success from "../components/Success.js";
+import Dialog from '@mui/material/Dialog';
+// import { Navigate } from "react-router-dom";
 
 const Login = () => {
-  const [isLoggedIn, setisLoggedIn] = useState(null);
+  // const [isLoggedIn, setisLoggedIn] = useState(null);
   const [spin, setSpin] = useState(false);
+  const [fail, setFail] = useState(false);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -26,17 +29,31 @@ const Login = () => {
       password: userData.password,
     };
     axios
-      .post("https://apigari.herokuapp.com/api/v1/auth/login/client", loginData)
+      .post("https://apigari.herokuapp.com/api/v1/auth/login", loginData)
       .then((response) => {
-        console.log(response);
-        // setSuccess(true);
+        // console.log(response.data.users.role_id);
+        
         setSpin(false);
-        setisLoggedIn(true);
-        document.cookie = `token=${response.data.accessToken}`;
-        window.location.href = "/";
+        // if (response.data.users.role_id === "2" ){
+        //   setFail(true);
+        //   <Dialog open={fail} onClose={handleSuccessClose}>
+        //       <Success />      
+        //   </Dialog>
+        // } else {
+          // setisLoggedIn(true),
+          document.cookie = `token=${response.data.accessToken}`
+          window.location.href = "/"
+        // }        
         // <Navigate to="/" />;
       });
   };
+
+  const [success, setSuccess] = useState(false);
+
+  const handleSuccessClose = () => {
+    setSuccess(false);
+  }; 
+
   return (
     <section className="flex flex-col md:flex-row h-screen items-center">
       <div className="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
