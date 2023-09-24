@@ -29,22 +29,23 @@ const Login = () => {
       password: userData.password,
     };
     axios
-      .post("https://apigari.herokuapp.com/api/v1/auth/login", loginData)
+      .post("http://192.168.88.246:3001/api/v1/auth/login", loginData)
       .then((response) => {
-        // console.log(response.data.users.role_id);
+        console.log(response.data);
         
         setSpin(false);
-        // if (response.data.users.role_id === "2" ){
-        //   setFail(true);
-        //   <Dialog open={fail} onClose={handleSuccessClose}>
-        //       <Success />      
-        //   </Dialog>
-        // } else {
-          // setisLoggedIn(true),
-          document.cookie = `token=${response.data.accessToken}`
-          window.location.href = "/"
-        // }        
-        // <Navigate to="/" />;
+        // response.data.users.role_id === "1"
+        //   ? console.log("authorised") 
+        //   : console.log("Not Authorised");
+
+          if (response.data.users.role_description === "SADM") {
+            document.cookie = `token=${response.data.accessToken}`
+            window.location.href = "/"
+            console.log("authorised") 
+          } else if(response.data.users.role_description!== "SADM") {
+            console.log(response.data.users.role_id );
+            console.log("Not Authorised")
+          }
       });
   };
 

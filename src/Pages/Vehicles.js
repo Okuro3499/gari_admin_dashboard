@@ -21,7 +21,7 @@ function Vehicles() {
   };
 
   useEffect(() => {
-    fetch("https://apigari.herokuapp.com/api/v1/cars")
+    fetch("http://192.168.88.246:3001/api/v1/cars")
       .then((response) => response.json())
       .then(
         (data) => {

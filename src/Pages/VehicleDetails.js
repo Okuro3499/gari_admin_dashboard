@@ -9,6 +9,7 @@ import DatePicker from "react-datetime";
 import moment from "moment";
 import "react-datetime/css/react-datetime.css";
 import SideBar from "../components/SideBar";
+import axios from "axios";
 
 import EditVehicle from "../components/Vehicle/EditVehicle";
 
@@ -160,9 +161,9 @@ function VehicleDetails(props) {
     const days = diffDuration.days();
     setTotalDays(days || 0);
     setTotalAmount(days * carDetails.price || 0);
-    console.log("start" + startDate);
-    console.log("end" + timeEnd);
-    console.log("diff" + days);
+    // console.log("start" + startDate);
+    // console.log("end" + timeEnd);
+    // console.log("diff" + days);
     // }, 2000);
   };
 
@@ -192,7 +193,7 @@ function VehicleDetails(props) {
     console.log(bookingData);
     // axios
     //   .put(
-    //     `https://apigari.herokuapp.com/api/v1/car/edit/${carId}`,
+    //     `http://192.168.88.246:3001/api/v1/car/edit/${carId}`,
     //     booking
     //   )
     //   .then((response) => {
@@ -242,8 +243,8 @@ function VehicleDetails(props) {
   const data = location.state?.data;
 
   useEffect(() => {
-    // fetch({url:`https://apigari.herokuapp.com/api/v1/cars/${data}`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
-    fetch(`https://apigari.herokuapp.com/api/v1/cars/${data}`)
+    // fetch({url:`http://192.168.88.246:3001/api/v1/cars/${data}`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
+    fetch(`http://192.168.88.246:3001/api/v1/cars/${data}`)
       .then((response) => response.json())
       .then(
         (data) => {
@@ -256,19 +257,35 @@ function VehicleDetails(props) {
           setError(error);
         }
       );
-    fetch(`https://apigari.herokuapp.com/api/v1/clients`)
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setUsers(data.clients);
-          console.log(data.clients);
+    // fetch(`http://192.168.88.246:3001/api/v1/users/role/2`)
+    //   .then((response) => response.json())
+    //   .then(
+    //     (data) => {
+    //       setLoading(false);
+    //       setUsers(data.clients);
+    //       console.log(data.clients);
+    //     },
+    //     (error) => {
+    //       setLoading(false);
+    //       setError(error);
+    //     }
+    //   );
+    const api = `http://192.168.88.246:3001/api/v1/users/role/2`
+    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
+        .then(res => {
+            console.log(res.data.role_user);
+            setLoading(false);
+            setUsers(res.data.role_user);
+        // this.setState({
+        //     items: res.data,  /*set response data in items array*/
+        //     isLoaded : true,
+        //     redirectToReferrer: false
+        // })
         },
         (error) => {
           setLoading(false);
           setError(error);
-        }
-      );
+        })
   }, [data]);
 
   useEffect(() => {

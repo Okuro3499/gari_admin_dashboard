@@ -44,9 +44,9 @@ function UserDetails(props) {
   const roleId = location.state?.roleId;
 
   useEffect(() => {
-    const api = `https://apigari.herokuapp.com/api/v1/users/userDetails/${userId}/${roleId}`
+    const api = `http://192.168.88.246:3001/api/v1/users/userDetails/${userId}/${roleId}`
     axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
-    // fetch(`https://apigari.herokuapp.com/api/v1/client/${userId}/${roleId}`)
+    // fetch(`http://192.168.88.246:3001/api/v1/client/${userId}/${roleId}`)
       // .then((response) => response.json())
       .then(res => {
         console.log(res.data.single_user);

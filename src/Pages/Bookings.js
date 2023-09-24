@@ -49,7 +49,7 @@ function Bookings() {
       headers: { Authorization: `Bearer ${Cookies.get("token")}` },
     };
 
-    fetch("https://apigari.herokuapp.com/api/v1/booked", config)
+    fetch("http://192.168.88.246:3001/api/v1/booked", config)
       .then((response) => response.json())
       .then(
         (data) => {
@@ -63,7 +63,7 @@ function Bookings() {
         }
       );
 
-    // fetch(`https://apigari.herokuapp.com/api/v1/cars/${carId}`)
+    // fetch(`http://192.168.88.246:3001/api/v1/cars/${carId}`)
     //   .then((response) => response.json())
     //   .then(
     //     (data) => {
@@ -76,7 +76,7 @@ function Bookings() {
     //     }
     //   );
 
-    // fetch(`https://apigari.herokuapp.com/api/v1/client/${bookings.client_Id}`)
+    // fetch(`http://192.168.88.246:3001/api/v1/client/${bookings.client_Id}`)
     //   .then((response) => response.json())
     //   .then(
     //     (data) => {

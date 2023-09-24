@@ -26,7 +26,7 @@ function Partners() {
   };
 
   useEffect(() => {
-    const api = `https://apigari.herokuapp.com/api/v1/users/role/3`
+    const api = `http://192.168.88.246:3001/api/v1/users/role/3`
     axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
         .then(res => {
             console.log(res.data.role_user);
@@ -43,7 +43,7 @@ function Partners() {
           setError(error);
         })
     
-    // fetch({`https://apigari.herokuapp.com/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
+    // fetch({`http://192.168.88.246:3001/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
       // .then((response) => response.json())
       // .then(
       //   (data) => {
@@ -59,7 +59,7 @@ function Partners() {
   }, []);
   
   // useEffect(() => {
-  //   fetch("https://apigari.herokuapp.com/api/v1/partners")
+  //   fetch("http://192.168.88.246:3001/api/v1/partners")
   //     .then((response) => response.json())
   //     .then(
   //       (data) => {

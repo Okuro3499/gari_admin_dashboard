@@ -24,7 +24,7 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />}/>
           <Route exact path="/" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<Dashboard />)}/>
           <Route path="/Vehicles" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<Vehicles />)} />
           <Route path="/VehicleDetails" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<VehicleDetails />)} />
