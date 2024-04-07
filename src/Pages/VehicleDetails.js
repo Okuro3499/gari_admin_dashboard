@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import baseURL from '../utils/Config.js';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { BallTriangle } from "react-loader-spinner";
 import { useLocation } from "react-router-dom";
@@ -20,33 +21,9 @@ function VehicleDetails(props) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [carDetails, setCarDetails] = useState({
-    car_id: "",
-    car_name: "",
-    status: "",
-    transmission: "",
-    engine: "",
-    color: "",
-    registration: "",
-    passengers: "",
-    company: "",
-    price: "",
-    doors: "",
-    drive: "",
-    front_view: "",
-    back_view: "",
-    right_view: "",
-    left_view: "",
-    interior_1: "",
-    interior_2: "",
-    feature_1: "",
-    feature_2: "",
-    feature_3: "",
-    feature_4: "",
-    feature_5: "",
-    created_by: "",
-    created_on: "",
-    modified_by: "",
-    last_modified_on: ""
+    car_id: "", car_name: "", status: "", transmission: "", engine: "", color: "", registration: "", passengers: "", company: "",
+    price: "", doors: "", drive: "", front_view: "", back_view: "", right_view: "", left_view: "", interior_1: "", interior_2: "",
+    feature_1: "", feature_2: "", feature_3: "", feature_4: "", feature_5: "", created_by: "", created_on: "", modified_by: "", last_modified_on: ""
   });
   const [booking, setBooking] = useState({
     car_id: "",
@@ -241,22 +218,23 @@ function VehicleDetails(props) {
 
   const location = useLocation();
   const data = location.state?.data;
+  console.log(data);
 
   useEffect(() => {
     // fetch({url:`http://192.168.88.246:3001/api/v1/cars/${data}`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
-    fetch(`http://192.168.88.246:3001/api/v1/cars/${data}`)
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setCarDetails(data.single_car);
-          console.log(data.single_car);
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        }
-      );
+    // fetch(`${baseURL}v1/cars/${data}`)
+    //   .then((response) => response.json())
+    //   .then(
+    //     (data) => {
+    //       setLoading(false);
+    //       setCarDetails(data.single_car);
+    //       console.log(data.single_car);
+    //     },
+    //     (error) => {
+    //       setLoading(false);
+    //       setError(error);
+    //     }
+    //   );
     // fetch(`http://192.168.88.246:3001/api/v1/users/role/2`)
     //   .then((response) => response.json())
     //   .then(
@@ -270,8 +248,45 @@ function VehicleDetails(props) {
     //       setError(error);
     //     }
     //   );
-    const api = `http://192.168.88.246:3001/api/v1/users/role/2`
-    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
+
+    if (data) {
+      // const data = location.state.data;
+      setCarDetails(prevState => ({
+        ...prevState,
+        car_id: data.car_id.toString(),
+        car_name: data.car_name,
+        status: data.status,
+        transmission: data.transmission,
+        engine: data.cc,
+        color: data.color,
+        registration: data.registration,
+        passengers: data.passengers.toString(),
+        company: data.company_id.toString(),
+        price: data.price,
+        doors: data.doors,
+        drive: data.drive.join(', '),
+        front_view: data.car_images[0] || '',
+        back_view: data.car_images[1] || '',
+        right_view: '',
+        left_view: '',
+        interior_1: '',
+        interior_2: '',
+        feature_1: data.features[0] || '',
+        feature_2: data.features[1] || '',
+        feature_3: data.features[2] || '',
+        // Add more as needed
+        created_by: data.created_by.toString(),
+        created_on: new Date(data.created_date).toLocaleDateString(),
+        modified_by: data.modified_by.toString(),
+        last_modified_on: new Date(data.modified_date).toLocaleDateString(),
+      }));
+    }
+
+    const roleId = {
+      role_id: "2"
+    };
+    const api = `${baseURL}v1/users/role`
+    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} }, roleId)
         .then(res => {
             console.log(res.data.role_user);
             setLoading(false);
@@ -286,7 +301,7 @@ function VehicleDetails(props) {
           setLoading(false);
           setError(error);
         })
-  }, [data]);
+  }, [data, ]);
 
   useEffect(() => {
     // slideRef.current.addEventListener("animationend", removeAnimation);

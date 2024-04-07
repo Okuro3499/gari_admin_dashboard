@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import baseURL from '../utils/Config.js';
 import Success from "../components/Success.js";
 import Dialog from '@mui/material/Dialog';
 // import { Navigate } from "react-router-dom";
@@ -9,7 +10,7 @@ const Login = () => {
   const [spin, setSpin] = useState(false);
   const [fail, setFail] = useState(false);
   const [userData, setUserData] = useState({
-    email: "",
+    phone_number: "",
     password: "",
   });
 
@@ -25,11 +26,11 @@ const Login = () => {
     e.preventDefault();
     setSpin(true);
     const loginData = {
-      email: userData.email,
+      phone_number: userData.phone_number,
       password: userData.password,
     };
     axios
-      .post("http://192.168.88.246:3001/api/v1/auth/login", loginData)
+      .post(`${baseURL}v1/auth/login`, loginData)
       .then((response) => {
         console.log(response.data);
         
@@ -38,12 +39,12 @@ const Login = () => {
         //   ? console.log("authorised") 
         //   : console.log("Not Authorised");
 
-          if (response.data.users.role_description === "SADM") {
+          if (response.data.user.role_id === 2) {
             document.cookie = `token=${response.data.accessToken}`
             window.location.href = "/"
             console.log("authorised") 
-          } else if(response.data.users.role_description!== "SADM") {
-            console.log(response.data.users.role_id );
+          } else if(response.data.user.role_id !== 2) {
+            console.log(response.data.user.role_id );
             console.log("Not Authorised")
           }
       });
@@ -65,24 +66,20 @@ const Login = () => {
         />
       </div>
 
-      <div
-        className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
-      flex items-center justify-center"
-      >
+      <div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12  flex items-center justify-center">
         <div className="w-full h-100">
-          <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
-            Log in to your account
-          </h1>
+          <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">Log in to your account</h1>
 
           <form className="mt-6" action="#" method="POST">
             <div>
-              <label className="block text-gray-700">Email Address</label>
+              <label className="block text-gray-700">Phone Number</label>
               <input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={handleChange}
-                placeholder="Enter Email Address"
+                type="tel"
+                name="phone_number" // Changed from "nu" to something more descriptive
+                value={userData.phone_number} // Assuming your state has a phoneNumber field
+                onChange={handleChange} // Make sure handleChange updates the phoneNumber in your state
+                placeholder="Enter Phone Number" // Updated placeholder
+                // pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" // Optional: Adds a pattern for validation (US phone number format)
                 className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
                 autoFocus
                 autoComplete="true"
@@ -99,17 +96,13 @@ const Login = () => {
                 onChange={handleChange}
                 placeholder="Enter Password"
                 minLength="6"
-                className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
-              focus:bg-white focus:outline-none"
+                className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
                 required
               />
             </div>
 
             <div className="text-right mt-2">
-              <a
-                href="/"
-                className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700"
-              >
+              <a href="/" className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700">
                 Forgot Password?
               </a>
             </div>
@@ -117,16 +110,12 @@ const Login = () => {
             <button
               onClick={handleSubmit}
               type="submit"
-              className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
-            px-4 py-3 mt-6"
+              className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg px-4 py-3 mt-6"
               disabled={spin}
             >
               {spin && (
                 <div>
-                  <svg
-                    className="animate-spin h-5 w-5 mr-3 bg-white"
-                    viewBox="0 0 20 20"
-                  />
+                  <svg className="animate-spin h-5 w-5 mr-3 bg-white" viewBox="0 0 20 20"/>
                 </div>
               )}
               {spin && <span>Logging In</span>}

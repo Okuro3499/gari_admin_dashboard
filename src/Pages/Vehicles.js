@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import baseURL from '../utils/Config.js';
 import { BallTriangle } from "react-loader-spinner";
 import Dialog from '@mui/material/Dialog';
 import { Link } from "react-router-dom";
@@ -21,7 +22,7 @@ function Vehicles() {
   };
 
   useEffect(() => {
-    fetch("http://192.168.88.246:3001/api/v1/cars")
+    fetch(`${baseURL}v1/cars`)
       .then((response) => response.json())
       .then(
         (data) => {
@@ -106,34 +107,32 @@ function Vehicles() {
                   </div>
                 </div>
                 <section className="flex flex-row flex-wrap mx-auto">
-                  {cars.filter((car)=> {
-                    if (searchTerm === ""){
-                      return car
-                    } else if (car.car_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                      return car
-                    } else if (car.company.toLowerCase().includes(searchTerm.toLowerCase())){
-                      return car
-                    } else if (car.transmission.toLowerCase().includes(searchTerm.toLowerCase())){
-                      return car
+                  {cars.filter((car) => {
+                    if (searchTerm === "") {
+                      return car;
+                    } else if (car.car_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                      return car;
+                    } else if (car.transmission.toLowerCase().includes(searchTerm.toLowerCase())) {
+                      return car;
                     }
                   }).map((car) => (
-                    <div className="transition-all duration-150 flex w-full px-4 py-6 md:w-1/2 lg:w-1/3" key={car.car_id}>
-                      <div className="mx-auto flex w-96 flex-col justify-center bg-white rounded-2xl shadow-xl shadow-slate-300/60">
-                        <img className="aspect-video w-96 rounded-t-2xl object-cover object-center" alt="car front view" src={car.front_view}/>
-                        <div className="pr-4 pl-4 pb-2 pt-2">
-                          <small className="text-blue-400 text-xs">
-                            {car.company}
-                          </small>
-                          <h1 className="text-m font-medium text-slate-600">
-                            {car.car_name}
-                          </h1>
-                        </div>
-                        <Link to="/VehicleDetails" state={{ data: car.car_id }} className="bg-transparent hover:bg-cyan-700 text-cyan-600 font-semibold hover:text-white py-2 px-2 border border-cyan-600 hover:border-transparent rounded m-4">
-                          <div className="text-center">View More</div>
-                        </Link>
+                  <div className="transition-all duration-150 flex w-full px-4 py-6 md:w-1/2 lg:w-1/3" key={car.car_id}>
+                    <div className="mx-auto flex w-96 flex-col justify-center bg-white rounded-2xl shadow-xl shadow-slate-300/60">
+                      {car.car_images[0] && (
+                      <img className="aspect-video w-96 rounded-t-2xl object-cover object-center" alt="car view" src={car.car_images[0]} />
+                      )}
+                      <div className="pr-4 pl-4 pb-2 pt-2">
+                        <h1 className="text-m font-medium text-slate-600">
+                          {car.car_name} - {car.color} ({car.transmission})
+                        </h1>
+                        <small className="text-blue-400 text-xs">Registration: {car.registration}</small>
                       </div>
-                    </div>
-                  ))}
+                    <Link to="/VehicleDetails" state={{ data: car }} className="bg-transparent hover:bg-cyan-700 text-cyan-600 font-semibold hover:text-white py-2 px-2 border border-cyan-600 hover:border-transparent rounded m-4">
+                      <div className="text-center">View More</div>
+                    </Link>
+                  </div>
+                </div>
+                ))}
                 </section>
                 <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
                   <div className="flex items-center mb-4 sm:mb-0">
