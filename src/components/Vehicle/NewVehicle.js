@@ -14,19 +14,27 @@ const predefinedTags = ['Automatic Emergency Braking', 'Lane Departure Warning',
 'USB Ports', 'Satellite Radio', 'Navigation System', 'Leather Seats', 'Heated Seats', 'Power Adjustable Seats', 'Sunroof', 'LED Headlights', 
 'Fog Lights', 'Rain-Sensing Wipers', 'Hands-Free Liftgate'];
 
-const NewVehicle = ({ props }) => {
+const NewVehicle = ({ onSuccess }) => {
   const [data, setData] = useState({
-    car_name: "", status: "", transmission: "", color: "", registration: "", passengers: "", company: "", 
-    price: "", doors: "", drive: "", carImages: [], features: [], company: "", CC: "", fuel: "", createdBy: ""
+    car_name: "", status: "", transmission: "", color: "", registration: "", passengers: "", company_id: "", price: "", doors: "", drive: "", car_images: [], features: [], CC: "", fuel: ""
   });
   const [carImagesUrl, setCarImagesUrl] = useState("");
+  const [numFiles, setNumFiles] = useState(0);
   const [statusSelected, setStatusSelected] = useState(null);
   const [transmissionSelected, setTransmissionSelected] = useState(null);
   const [fuelSelected, setFuelSelected] = useState(null);
   const [driveSelected, setDriveSelected] = useState(null);
+  const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [filteredTags, setFilteredTags] = useState(predefinedTags);
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(null);
   const [spin, setSpin] = useState(false);
   const [spin1, setSpin1] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const statusDropdown = [
     {
@@ -109,15 +117,6 @@ const NewVehicle = ({ props }) => {
     });
   };
 
-  //TODO: rearrange here
-  const [images, setImages] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [inputValue, setInputValue] = useState('');
-  const [filteredTags, setFilteredTags] = useState(predefinedTags);
-  const [companies, setCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-
   const handleImageUpload = async () => {
     setSpin1(true);
 
@@ -140,8 +139,7 @@ const NewVehicle = ({ props }) => {
         uploadedImages.push(data.secure_url);
       }
 
-      // setImages([]);
-      // setImagePreviews([]);
+      setCarImagesUrl(uploadedImages);
     } catch (error) {
       console.error('Error uploading images:', error);
     } finally {
@@ -159,6 +157,8 @@ const NewVehicle = ({ props }) => {
 
     setImagePreviews(previews);
     setImages(files);
+
+    setNumFiles(files.length);
   };
 
   const handleInputChange = (event) => {
@@ -181,7 +181,19 @@ const NewVehicle = ({ props }) => {
   const handleTagClick = (tag) => {
     setTags([...tags, tag]);
     setInputValue('');
+    setFilteredTags(filteredTags.filter((t) => t !== tag));
   };
+
+  const handleImageRemove = (index) => {
+    const updatedPreviews = [...imagePreviews];
+    updatedPreviews.splice(index, 1);
+    setImagePreviews(updatedPreviews);
+    const updatedImages = [...images];
+    updatedImages.splice(index, 1);
+    setImages(updatedImages);
+    setNumFiles(updatedPreviews.length);
+  };
+  
 
   const handleTagRemove = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
@@ -202,30 +214,35 @@ const NewVehicle = ({ props }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSpin(true);
+    const config = {
+      headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+    };
+
     const carData = {
       car_name: data.car_name,
-      status: statusSelected.value,
-      transmission: transmissionSelected.value,
-      fuel: fuelSelected.value,
+      status: statusSelected ? statusSelected.value : "",
+      transmission: transmissionSelected ? transmissionSelected.value : "",
       color: data.color,
       registration: data.registration,
       passengers: data.passengers,
-      company: data.company,
+      company_id: selectedCompany ? selectedCompany.value : "",
       price: data.price,
       doors: data.doors,
-      drive: driveSelected.value,
-      feature_1: data.feature_1,
-      feature_2: data.feature_2,
-      feature_3: data.feature_3,
-      feature_4: data.feature_4,
-      feature_5: data.feature_5,
+      drive: driveSelected ? [driveSelected.value] : [],
+      car_images: carImagesUrl,
+      features: tags,
+      CC: data.CC,
+      fuel: fuelSelected ? fuelSelected.value : "",
+      created_by: `${Cookies.get("userId")}`
     };
     axios
-      .post("https://apigari.herokuapp.com/api/v1/newcar", carData)
+      .post(`${baseURL}v1/newcar`, carData, config)
       .then((response) => {
         console.log(response);
         setSuccess(true);
         setSpin(false);
+        onSuccess(); 
+        toast.success("Car added successfully", { position: "top-center", autoClose: 5000, hideProgressBar: true, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined});
       });
   };
 
@@ -247,9 +264,9 @@ const NewVehicle = ({ props }) => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      <Dialog open={success} onClose={handleSuccessClose}>
+      {/* <Dialog open={success} onClose={handleSuccessClose}>
         <Success />      
-      </Dialog>
+      </Dialog> */}
       <ToastContainer />
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
@@ -285,12 +302,12 @@ const NewVehicle = ({ props }) => {
 
           <div>
             <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900">Price</label>
-            <input type="text" name="price" value={data.price} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Price per day in Ksh"/>
+            <input type="number" name="price" value={data.price} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Price per day in Ksh"/>
           </div>
 
           <div>
             <label htmlFor="doors" className="block mb-2 text-sm font-medium text-gray-900">Doors</label>
-            <input type="text" name="doors" value={data.doors} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="No. of doors"/>
+            <input type="number" name="doors" value={data.doors} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="No. of doors"/>
           </div>
 
           <div>
@@ -299,8 +316,8 @@ const NewVehicle = ({ props }) => {
           </div>
 
           <div>
-            <label htmlFor="passengers"className="block mb-2 text-sm font-medium text-gray-900">CC</label>
-            <input type="number" name="passengers" value={data.passengers} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="No. of passengers"/>
+            <label htmlFor="CC"className="block mb-2 text-sm font-medium text-gray-900">CC</label>
+            <input type="number" name="CC" value={data.CC} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Engine Capacity"/>
           </div>
         </div>
 
@@ -317,7 +334,8 @@ const NewVehicle = ({ props }) => {
           <div className="w-full px-3">
             <div className="block text-sm font-medium text-gray-900 ">Attach Car Image</div>
             <label>
-              <input type="file" accept="image/*" multiple onChange={handleImageChange}/>
+              <input type="file" accept="image/*" multiple onChange={handleImageChange} />
+              {/* {numFiles === 0 ? "Choose files" : numFiles === 1 ? "1 File" : `${numFiles} Files`} */}
             </label>
             <button className="inline-flex items-center px-3 py-2 font-medium rounded leading-5 text-primary-100 text-white bg-cyan-600 hover:bg-cyan-700" disabled={spin1} onClick={handleImageUpload}>
               {spin1 && (<svg className="animate-spin h-5 w-5 mr-3 bg-white" viewBox="0 0 20 20" />)}
@@ -327,7 +345,10 @@ const NewVehicle = ({ props }) => {
           </div>
           <div className="flex flex-wrap justify-center mt-4">
             {imagePreviews.map((preview, index) => (
-              <img key={index} src={preview} alt={`Preview ${index}`} className="w-32 h-32 mx-2 my-2 object-cover rounded" />
+            <div key={index} className="relative">
+              <img src={preview} alt={`Preview ${index}`} className="w-32 h-32 mx-2 my-2 object-cover rounded" />
+              <button type="button" className="absolute top-0 right-0 p-1 bg-red-500 rounded-full text-white text-xs" onClick={() => handleImageRemove(index)}>x</button>
+            </div>
             ))}
           </div>
         </div>
@@ -336,8 +357,7 @@ const NewVehicle = ({ props }) => {
           <label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900">Features</label>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
-            <div key={index} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg flex items-center">
-              {tag}
+            <div key={index} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg flex items-center">{tag}
               <button type="button" className="ml-2 text-red-600" onClick={() => handleTagRemove(tag)}>x</button>
             </div>
             ))}

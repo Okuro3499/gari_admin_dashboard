@@ -196,17 +196,18 @@ function VehicleDetails(props) {
     }
   };
   
-
   const pauseSlider = () => {
     clearInterval(slideInterval);
   };
 
   const handleOnNextClick = () => {
     setCurrentIndex((currentIndex + 1) % carImages.length);
+    console.log("New currentIndex:", (currentIndex + 1) % carImages.length);
   };
   
   const handleOnPrevClick = () => {
     setCurrentIndex((currentIndex + carImages.length - 1) % carImages.length);
+    console.log("New currentIndex:", (currentIndex - 1) % carImages.length);
   };
 
   const location = useLocation();
@@ -235,7 +236,7 @@ function VehicleDetails(props) {
         features: data.features, 
         created_by: data.created_by.toString(),
         created_on: new Date(data.created_date).toLocaleDateString(),
-        modified_by: data.modified_by.toString(),
+        modified_by: data.modified_by ? data.modified_by.toString() : null,
         last_modified_on: new Date(data.modified_date).toLocaleDateString(),
       }));
     }

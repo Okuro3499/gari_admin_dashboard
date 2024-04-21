@@ -12,12 +12,18 @@ function Vehicles() {
   const [cars, setCars] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openAddCarDialog, setOpenAddCarDialog] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 20;
 
   const handleClickOpen = () => {
     setOpenAddCarDialog(true);
   };
 
   const handleClose = () => {
+    setOpenAddCarDialog(false);
+  };
+
+  const handleCloseNewVehicleDialog = () => {
     setOpenAddCarDialog(false);
   };
 
@@ -39,6 +45,13 @@ function Vehicles() {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else {
+    const indexOfLastCar = currentPage * carsPerPage;
+    const indexOfFirstCar = indexOfLastCar - carsPerPage;
+    const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
+    const totalPages = Math.ceil(cars.length / carsPerPage);
+    const hasNextPage = currentPage < totalPages;
+    const hasPreviousPage = currentPage > 1;
+
     return (
       <div>
         <SideBar />
@@ -100,7 +113,7 @@ function Vehicles() {
                         </button>
 
                         <Dialog open={openAddCarDialog} onClose={handleClose}>
-                          <NewVehicle />
+                          <NewVehicle onSuccess={handleCloseNewVehicleDialog} />
                         </Dialog>
                       </div>
                     </div>
@@ -148,24 +161,28 @@ function Vehicles() {
                     </a>
                     <span className="text-sm font-normal text-gray-500">
                       Showing{" "}
-                      <span className="text-gray-900 font-semibold">1-20</span>{" "}
+                      <span className="text-gray-900 font-semibold">{indexOfFirstCar + 1} - {indexOfLastCar > cars.length ? cars.length : indexOfLastCar}</span>{" "}
                       of{" "}
-                      <span className="text-gray-900 font-semibold">2290</span>
+                      <span className="text-gray-900 font-semibold">{cars.length}</span>
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                      <svg className="-ml-1 mr-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
+                    {hasPreviousPage && (
+                    <button
+                      onClick={() => setCurrentPage(currentPage - 1)}
+                      className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center"
+                    >
                       Previous
-                    </a>
-                    <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                    </button>
+                  )}
+                    {hasNextPage && (
+                    <button
+                      onClick={() => setCurrentPage(currentPage + 1)}
+                      className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center"
+                    >
                       Next
-                      <svg className="-mr-1 ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
+                    </button>
+                  )}
                   </div>
                 </div>
               </main>
