@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import baseURL from '../utils/Config.js';
 import { BallTriangle } from "react-loader-spinner";
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
@@ -11,43 +12,49 @@ function Users() {
   const [loading, setLoading] = useState(true);
   const [userClients, setUserClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 20;
 
   useEffect(() => {
-    const api = `http://192.168.88.246:3001/api/v1/users/role/2`
-    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
-        .then(res => {
-            console.log(res.data.role_user);
-            setLoading(false);
-          setUserClients(res.data.role_user);
-        // this.setState({
-        //     items: res.data,  /*set response data in items array*/
-        //     isLoaded : true,
-        //     redirectToReferrer: false
-        // })
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        })
-    
-    // fetch({`http://192.168.88.246:3001/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
-      // .then((response) => response.json())
-      // .then(
-      //   (data) => {
-      //     setLoading(false);
-      //     // setUserClients(data.clients);
-      //     console.log(data);
-      //   },
-      //   (error) => {
-      //     setLoading(false);
-      //     setError(error);
-      //   }
-      // );
+    const requestBody = {
+      role_id: 2,
+    };
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+    body: JSON.stringify(requestBody),
+  };
+
+  fetch(`${baseURL}v1/users/role`, requestOptions)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }).then(data => {
+      console.log(data);
+      setLoading(false);
+      setUserClients(data.role_users);
+    }).catch(error => {
+      console.error('Fetch error:', error);
+      setLoading(false);
+      setError(error);
+    });
   }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else {
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = userClients.slice(indexOfFirstUser, indexOfLastUser);
+    const totalPages = Math.ceil(userClients.length / usersPerPage);
+    const hasNextPage = currentPage < totalPages;
+    const hasPreviousPage = currentPage > 1;
     return (
       <div>
         <SideBar />
@@ -152,16 +159,16 @@ function Users() {
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {userClients.filter((userClient)=> {
-                              if (searchTerm === ""){
-                                return userClient
-                              } else if (userClient.first_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return userClient
-                              } else if (userClient.last_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return userClient
-                              } else if (userClient.transmission.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return userClient
+                            {userClients.filter((userClient) => {
+                              const searchTermLower = searchTerm.toLowerCase();
+                              const phoneNumberString = userClient.phone_number.toString();
+                              if (
+                                searchTerm === "" || userClient.first_name.toLowerCase().includes(searchTermLower) ||
+                                userClient.last_name.toLowerCase().includes(searchTermLower) || phoneNumberString.includes(searchTerm)
+                              ) {
+                                return true;
                               }
+                              return false;
                             }).map((userClient) => (
                             <tr className="hover:bg-gray-100" key={userClient.user_id}>
                               <td className="p-4 w-4">
@@ -176,7 +183,7 @@ function Users() {
                                   <img className="h-10 w-10 rounded-full" src={userClient.user_photo_url || require('../profileIcon.jpg')} alt={userClient.first_name}/>
                                   <div className="text-sm font-normal text-gray-500">
                                     <div className="text-base font-semibold text-gray-900">
-                                      {userClient.first_name + " " + userClient.last_name}
+                                      {`${userClient.first_name} ${userClient.last_name}`}
                                     </div>
                                     <div className="text-sm font-normal text-gray-500">
                                       {userClient.email}
@@ -184,7 +191,7 @@ function Users() {
                                   </div>
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                  {"+254" + userClient.mobile}
+                                  {"+254" + userClient.phone_number}
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
                                   {userClient.district}
@@ -223,36 +230,24 @@ function Users() {
                 </div>
                 <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
                   <div className="flex items-center mb-4 sm:mb-0">
-                    <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
-                      <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
-                    <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2">
-                      <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
                     <span className="text-sm font-normal text-gray-500">
                       Showing{" "}
-                      <span className="text-gray-900 font-semibold">1-20</span>{" "}
+                      <span className="text-gray-900 font-semibold">{indexOfFirstUser + 1} - {indexOfLastUser > userClients.length ? userClients.length : indexOfLastUser}</span>{" "}
                       of{" "}
-                      <span className="text-gray-900 font-semibold">2290</span>
+                      <span className="text-gray-900 font-semibold">{userClients.length}</span>
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                      <svg className="-ml-1 mr-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
+                    {hasPreviousPage && (
+                    <button onClick={() => setCurrentPage(currentPage - 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
                       Previous
-                    </a>
-                    <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                    </button>
+                    )}
+                    {hasNextPage && (
+                    <button onClick={() => setCurrentPage(currentPage + 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
                       Next
-                      <svg className="-mr-1 ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
+                    </button>
+                    )}
                   </div>
                 </div>
               </main>

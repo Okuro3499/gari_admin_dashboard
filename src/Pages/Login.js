@@ -42,6 +42,7 @@ const Login = () => {
           if (response.data.user.role_id === 2) {
             document.cookie = `token=${response.data.accessToken}`
             document.cookie = `userId=${response.data.user.user_id}`
+            document.cookie = `roleId=${response.data.user.role_id}`
             window.location.href = "/"
             console.log("authorised") 
           } else if(response.data.user.role_id !== 2) {
