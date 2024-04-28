@@ -47,7 +47,6 @@ function Vehicles() {
   } else {
     const indexOfLastCar = currentPage * carsPerPage;
     const indexOfFirstCar = indexOfLastCar - carsPerPage;
-    const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
     const totalPages = Math.ceil(cars.length / carsPerPage);
     const hasNextPage = currentPage < totalPages;
     const hasPreviousPage = currentPage > 1;

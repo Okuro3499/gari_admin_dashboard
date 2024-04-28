@@ -3,12 +3,10 @@ import baseURL from '../utils/Config.js';
 import { BallTriangle } from "react-loader-spinner";
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Cookies from "js-cookie";
 
 function Users() {
   const [error, setError] = useState(null);
-  // const [isLoaded, setIsLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userClients, setUserClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,7 +49,6 @@ function Users() {
   } else {
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = userClients.slice(indexOfFirstUser, indexOfLastUser);
     const totalPages = Math.ceil(userClients.length / usersPerPage);
     const hasNextPage = currentPage < totalPages;
     const hasPreviousPage = currentPage > 1;

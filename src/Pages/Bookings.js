@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import baseURL from '../utils/Config.js';
 import Dialog from '@mui/material/Dialog';
 import { BallTriangle } from "react-loader-spinner";
 import SideBar from "../components/SideBar";
@@ -10,31 +11,15 @@ function Bookings() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState({
-    booking_id: "",
-    car_id: "",
-    client_id: "",
-    book_date_from: "",
-    book_date_to: "",
-    destination: "",
-    drive: "",
-    total_days: "",
-    total_amount: "",
+    booking_id: "", car_id: "", client_id: "", book_date_from: "", book_date_to: "", 
+    destination: "", drive: "", status: "", total_days: "", total_amount: ""
   });
   const [openAddBookingDialog, setOpenAddBookingDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editable, setEditable] = useState(false);
   const [bookingId, setBookingId] = useState(null);
-  // const [bookingId, setBookingId] = useState("");
-  // const [carDetails, setCarDetails] = useState({
-  //   car_name: "",
-  // });
-  // const [clientDetails, setClientDetails] = useState({
-  //   first_name: " ",
-  //   last_name: " ",
-  // });
-  // const [carId, setCarId] = useState("");
-  // const [clientId, setClientId] = useState("");
-  // const [date, setDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const bookingsPerPage = 20;
 
   const handleClickOpen = () => {
     setOpenAddBookingDialog(true);
@@ -49,7 +34,7 @@ function Bookings() {
       headers: { Authorization: `Bearer ${Cookies.get("token")}` },
     };
 
-    fetch("http://192.168.88.246:3001/api/v1/booked", config)
+    fetch(`${baseURL}v1/bookings`, config)
       .then((response) => response.json())
       .then(
         (data) => {
@@ -62,37 +47,35 @@ function Bookings() {
           setError(error);
         }
       );
-
-    // fetch(`http://192.168.88.246:3001/api/v1/cars/${carId}`)
-    //   .then((response) => response.json())
-    //   .then(
-    //     (data) => {
-    //       setLoading(false);
-    //       setCarDetails(data.single_car);
-    //     },
-    //     (error) => {
-    //       setLoading(false);
-    //       setError(error);
-    //     }
-    //   );
-
-    // fetch(`http://192.168.88.246:3001/api/v1/client/${bookings.client_Id}`)
-    //   .then((response) => response.json())
-    //   .then(
-    //     (data) => {
-    //       setLoading(false);
-    //       setClientDetails(data.single_client);
-    //     },
-    //     (error) => {
-    //       setLoading(false);
-    //       setError(error);
-    //     }
-    //   );
   }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else {
+    const indexOfLastBooking = currentPage * bookingsPerPage;
+    const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
+    const totalPages = Math.ceil(bookings.length / bookingsPerPage);
+    const hasNextPage = currentPage < totalPages;
+    const hasPreviousPage = currentPage > 1;
+    const getStatusColorClass = (status) => {
+      if (!status) {
+        return "bg-gray-400";
+      }
+      switch (status.toLowerCase()) {
+        case "pending":
+          return "bg-yellow-300";
+        case "completed":
+          return "bg-green-400";
+        case "confirmed":
+          return "bg-green-600";
+        case "canceled":
+          return "bg-red-600";
+        case "in progress":
+          return "bg-orange-400";
+        default:
+          return "bg-gray-400";
+      }
+    };
     return (
       <div>
         <SideBar />
@@ -178,13 +161,13 @@ function Bookings() {
                                 Car Name
                               </th>
                               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                Start Date
+                                Booking Dates
                               </th>
                               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                End Date
+                                Drive
                               </th>
                               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                Status
+                                Booking status
                               </th>
                               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                 Days
@@ -205,12 +188,16 @@ function Bookings() {
                                 return booking;
                               } else if (booking.car_name.toLowerCase().includes(searchTerm.toLowerCase())) {
                                 return booking;
-                              }}).map((booking) => {
-                                //convert date from
-                                let dateFrom = new Date(booking.book_date_from).toLocaleDateString("en-GB", {month: "2-digit",day: "2-digit",year: "numeric"});
+                              }
+                            }).map((booking) => {
+                                // Convert date from
+                                let dateFrom = new Date(booking.book_date_from).toLocaleString("en-GB", 
+                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true});
 
-                                //convert date to
-                                let dateTo = new Date(booking.book_date_to).toLocaleDateString("en-GB", {month: "2-digit",day: "2-digit",year: "numeric"});
+                                // Convert date to
+                                let dateTo = new Date(booking.book_date_to).toLocaleString("en-GB", 
+                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true});
+
                                 return (
                                   <tr className="hover:bg-gray-100" key={booking.booking_id}>
                                     <td className="p-4 w-4">
@@ -230,15 +217,15 @@ function Bookings() {
                                       </div>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                      {dateFrom}
+                                      {dateFrom} - {dateTo}
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                      {dateTo}
+                                      {booking.drive}
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                       <div className="flex items-center">
-                                        <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2" />
-                                        Pending
+                                        <div className={`h-2.5 w-2.5 rounded-full ${getStatusColorClass(booking.status)} mr-2`} />
+                                        {booking.status}
                                       </div>
                                     </td>
                                     <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
@@ -255,13 +242,12 @@ function Bookings() {
                                         </svg>
                                       </button>
 
-                                      <button type="button" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                      {/* <button type="button" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                           <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
                                         </svg>
-                                      </button>
+                                      </button> */}
 
-                                      {/* state={{ data: client.client_id }}  */}
                                       <Link to="/" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                           <path fillRule="evenodd" d="M.2 10a11 11 0 0 1 19.6 0A11 11 0 0 1 .2 10zm9.8 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" clipRule="evenodd"/>
@@ -279,36 +265,24 @@ function Bookings() {
                 </div>
                 <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
                   <div className="flex items-center mb-4 sm:mb-0">
-                    <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
-                      <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
-                    <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2">
-                      <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
                     <span className="text-sm font-normal text-gray-500">
-                      Showing
-                      <span className="text-gray-900 font-semibold">1-20</span>
-                      of
-                      <span className="text-gray-900 font-semibold">2290</span>
+                      Showing{" "}
+                      <span className="text-gray-900 font-semibold">{indexOfFirstBooking + 1} - {indexOfLastBooking > bookings.length ? bookings.length : indexOfLastBooking}</span>{" "}
+                      of{" "}
+                      <span className="text-gray-900 font-semibold">{bookings.length}</span>
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                      <svg className="-ml-1 mr-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
+                    {hasPreviousPage && (
+                    <button onClick={() => setCurrentPage(currentPage - 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
                       Previous
-                    </a>
-                    <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                      Next                    
-                      <svg className="-mr-1 ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </a>
+                    </button>
+                    )}
+                    {hasNextPage && (
+                    <button onClick={() => setCurrentPage(currentPage + 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                      Next
+                    </button>
+                    )}
                   </div>
                 </div>
               </main>
