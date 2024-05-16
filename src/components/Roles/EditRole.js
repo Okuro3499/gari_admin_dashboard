@@ -3,7 +3,7 @@ import axios from "axios";
 import Success from "../Success";
 import Dialog from '@mui/material/Dialog';
 
-const EditStaff = ({ staffId }) => {
+const EditRole = ({ staffId }) => {
   // const [error, setError] = useState(null);
   const [staffDetails, setStaffDetails] = useState({
     staff_name: "",
@@ -208,4 +208,4 @@ const EditStaff = ({ staffId }) => {
     </div>
   );
 };
-export default EditStaff;
+export default EditRole;

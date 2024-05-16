@@ -6,6 +6,7 @@ import SideBar from "../components/SideBar";
 import Cookies from "js-cookie";
 import EditBooking from "../components/Booking/EditBooking";
 import { Link } from "react-router-dom";
+import Select from "react-select";
 
 function Bookings() {
   const [error, setError] = useState(null);
@@ -14,12 +15,18 @@ function Bookings() {
     booking_id: "", car_id: "", client_id: "", book_date_from: "", book_date_to: "", 
     destination: "", drive: "", status: "", total_days: "", total_amount: ""
   });
+  const [selectedStatus, setSelectedStatus] = useState({ value: "", label: "All" });
   const [openAddBookingDialog, setOpenAddBookingDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editable, setEditable] = useState(false);
   const [bookingId, setBookingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const bookingsPerPage = 20;
+
+  const statusDropdown = [
+    {value: "", label: "All"}, {value: "pending", label: "Pending"}, {value:"completed", label:"Completed"}, 
+    {value:"confirmed", label:"Confirmed"}, {value:"canceled", label:"Canceled"}, {value:"in progress", label:"in progress" }
+  ];
 
   const handleClickOpen = () => {
     setOpenAddBookingDialog(true);
@@ -28,6 +35,10 @@ function Bookings() {
   const handleClose = () => {
     setOpenAddBookingDialog(false);
   };
+
+  const handleStatusChange = (selectedOption) => {
+    setSelectedStatus(selectedOption);
+  };  
 
   useEffect(() => {
     const config = {
@@ -97,7 +108,7 @@ function Bookings() {
                   <div className="mb-1 w-full">
                     <div className="mb-4">
                       <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                        All Bookings
+                        {selectedStatus.value === "" ? "All bookings" : `All ${selectedStatus.value} bookings`}
                       </h1>
                     </div>
                     <div className="block sm:flex items-center md:divide-x md:divide-gray-100">
@@ -138,6 +149,10 @@ function Bookings() {
                           </svg>
                           New Booking
                         </a>
+                      </div>
+
+                      <div className="flex flex-col w-full ml-2 md:w-1/3 lg:w-1/3">
+                        <Select placeholder="select status" value={selectedStatus} options={statusDropdown} onChange={handleStatusChange}/>
                       </div>
                     </div>
                   </div>
@@ -182,14 +197,37 @@ function Bookings() {
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
                             {bookings.filter((booking) => {
-                              if (searchTerm === "") {
-                                return booking;
-                              } else if (booking.client_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return booking;
-                              } else if (booking.car_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return booking;
+                              // if (searchTerm === "") {
+                              //   return booking;
+                              // } else if (booking.first_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                              //   return booking;
+                              // } else if (booking.last_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                              //   return booking;
+                              // } else if (booking.phone_number.toLowerCase().includes(searchTerm.toLowerCase())) {
+                              //   return booking;
+                              // } else if (booking.car_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                              //   return booking;
+                              // }
+                              const searchTermLower = searchTerm.toLowerCase();
+                              const phoneNumberString = booking.phone_number.toString();
+                              if (
+                                searchTerm === "" || booking.first_name.toLowerCase().includes(searchTermLower) ||
+                                booking.last_name.toLowerCase().includes(searchTermLower) || phoneNumberString.includes(searchTerm) ||
+                                booking.car_name.toLowerCase().includes(searchTermLower)
+                              ) {
+                                return true;
                               }
-                            }).map((booking) => {
+                              return false;
+                            })
+                            .filter(booking => {
+                              // Filter based on selected status
+                              if (selectedStatus.value === "") {
+                                return true; // Show all bookings when no status is selected
+                              } else {
+                                return booking.status === selectedStatus.value;
+                              }
+                            })
+                            .map((booking) => {
                                 // Convert date from
                                 let dateFrom = new Date(booking.book_date_from).toLocaleString("en-GB", 
                                 {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true});

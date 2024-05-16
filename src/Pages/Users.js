@@ -4,44 +4,112 @@ import { BallTriangle } from "react-loader-spinner";
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import Select from "react-select";
 
 function Users() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userClients, setUserClients] = useState([]);
+  const [initialUsers, setInitialUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRole, setSelectedRole] = useState({ value: "", label: "All" });
+  const [roles, setRoles] = useState([]);
   const usersPerPage = 20;
 
-  useEffect(() => {
-    const requestBody = {
-      role_id: 2,
-    };
-
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-    body: JSON.stringify(requestBody),
+  const getStatusColorClass = (status) => {
+    if (!status) {
+      return "bg-gray-400";
+    }
+    switch (status.toLowerCase()) {
+      case "active":
+        return "bg-green-400";
+      case "inactive":
+        return "bg-red-600";
+      default:
+        return "bg-gray-400";
+    }
   };
 
-  fetch(`${baseURL}v1/users/role`, requestOptions)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then(data => {
-      console.log(data);
+  const handleRoleChange = (selectedOption) => {
+    setSelectedRole(selectedOption);
+
+    if (selectedOption.value === "") {
+      setUserClients(initialUsers);
       setLoading(false);
-      setUserClients(data.role_users);
-    }).catch(error => {
-      console.error('Fetch error:', error);
-      setLoading(false);
-      setError(error);
-    });
+    } else {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({ role_id: selectedOption.value }),
+      };
+  
+      fetch(`${baseURL}v1/users/role`, requestOptions)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(data);
+          setLoading(false);
+          setUserClients(data.role_users);
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          setLoading(false);
+          setError(error);
+        });
+    }
+  };
+  
+  const rolesDropdown = [
+    { value: "", label: "All" },
+    ...roles.map((role) => ({
+      value: role.role_id,
+      label: role.role_name,
+    })),
+  ];
+  
+  useEffect(() => {
+    const config = {
+      headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+    };
+
+    fetch(`${baseURL}v1/users`, config)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        setLoading(false);
+        setInitialUsers(data.users);
+        setUserClients(data.users);
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+        setLoading(false);
+        setError(error);
+      });
+  
+    fetch(`${baseURL}v1/roles`, config)
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          console.log(data)
+          setRoles(data.roles);
+        },
+        (error) => {
+          console.error("Error fetching roles:", error);
+        }
+      );
   }, []);
 
   if (error) {
@@ -70,7 +138,7 @@ function Users() {
                   <div className="mb-1 w-full">
                     <div className="mb-4">
                       <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                        All users
+                        {selectedRole.value === "" ? "All users" : `${selectedRole.label} users`}
                       </h1>
                     </div>
                     <div className="sm:flex">
@@ -80,16 +148,22 @@ function Users() {
                             Search
                           </label>
                           <div className="mt-1 relative lg:w-64 xl:w-96">
-                          <input type="text" name="searchTerm" id="userSearch" onChange={e=> {setSearchTerm(e.target.value)}} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Search for User"/>
+                          <input type="text" name="searchTerm" id="userSearch" onChange={e=> {setSearchTerm(e.target.value)}} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder={selectedRole.value === "" ? "Search for user" :`Search for ${selectedRole.label}`}/>
                           </div>
                         </form>
                         <div className="flex space-x-1 pl-0 sm:pl-2 mt-3 sm:mt-0">
-                          <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
+                        <a href="/" className="w-1/2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
+                          <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd"/>
+                          </svg>
+                          Export
+                        </a>
+                          {/* <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
                             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd"/>
                             </svg>
-                          </a>
-                          <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
+                          </a> */}
+                          {/* <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
                             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
                             </svg>
@@ -103,7 +177,7 @@ function Users() {
                             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                               <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                             </svg>
-                          </a>
+                          </a> */}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 sm:space-x-3 ml-auto">
@@ -111,14 +185,11 @@ function Users() {
                         <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
                         </svg>
-                        Add user
+                        {selectedRole.value === "" ? "Add user" : `Add ${selectedRole.label}`}
                         </button>
-                        <a href="/" className="w-1/2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
-                          <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd"/>
-                          </svg>
-                          Export
-                        </a>
+                        <div className="w-1/2 focus:ring-4 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 sm:w-auto">
+                          <Select placeholder="Select role" value={selectedRole} options={rolesDropdown} onChange={handleRoleChange}/>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -145,7 +216,7 @@ function Users() {
                                 Phone Number
                               </th>
                               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                District
+                                Role
                               </th>
                               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                 Status
@@ -191,12 +262,12 @@ function Users() {
                                   {"+254" + userClient.phone_number}
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                  {userClient.district}
+                                  {userClient.role_name}
                                 </td>
                                 <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
-                                  <div className="flex items-center">
-                                    <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"/>
-                                    Active
+                                <div className="flex items-center">
+                                  <div className={`h-2.5 w-2.5 rounded-full ${getStatusColorClass(userClient.status)} mr-2`} />
+                                    {userClient.status}
                                   </div>
                                 </td>
                                 <td className="p-4 whitespace-nowrap space-x-2">

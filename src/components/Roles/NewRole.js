@@ -4,7 +4,7 @@ import Success from "../Success";
 import Dialog from '@mui/material/Dialog';
 // import Dialog from "@material-ui/core/Dialog";
 
-const NewStaff = () => {
+const NewRole = () => {
   // const [error, setError] = useState(null);
   const [data, setData] = useState({
     staff_name: "",
@@ -55,19 +55,10 @@ const NewStaff = () => {
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
           <div>
-            <label
-              htmlFor="company_name"
-              className="block mb-2 text-sm font-medium text-gray-900 ">
+            <label htmlFor="company_name" className="block mb-2 text-sm font-medium text-gray-900 ">
               Staff name
             </label>
-            <input
-              type="text"
-              name="staff_name"
-              value={data.staff_name}
-              onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="John"
-              required/>
+            <input type="text" name="staff_name" value={data.staff_name} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="John" required/>
           </div>
           <div>
             <label
@@ -152,4 +143,4 @@ const NewStaff = () => {
     </div>
   );
 };
-export default NewStaff;
+export default NewRole;

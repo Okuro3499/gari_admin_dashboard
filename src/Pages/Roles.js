@@ -1,80 +1,50 @@
 import React, { useState, useEffect } from "react";
+import baseURL from '../utils/Config.js';
 import Dialog from '@mui/material/Dialog';
 import { BallTriangle } from "react-loader-spinner";
-import EditStaff from "../components/Staff/EditStaff";
-import NewStaff from "../components/Staff/NewStaff";
-import SideBar from "../components/SideBar";
+import EditRole from "../components/Roles/EditRole.js";
+import NewRole from "../components/Roles/NewRole.js";
+import SideBar from "../components/SideBar.js";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-function Staff() {
+function Roles() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userStaffs, setUserStaffs] = useState([]);
-  const [openAddStaffDialog, setOpenAddStaffDialog] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [openAddRoleDialog, setOpenAddRoleDialog] = useState(false);
   const [editable, setEditable] = useState(false);
-  const [staffId, setStaffId] = useState("");
+  const [roleId, setRoleId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleClickOpen = () => {
-    setOpenAddStaffDialog(true);
+    setOpenAddRoleDialog(true);
   };
 
   const handleClose = () => {
-    setOpenAddStaffDialog(false);
+    setOpenAddRoleDialog(false);
   };
 
   useEffect(() => {
-    const api = `http://192.168.88.246:3001/api/v1/users/role/4`
-    axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
-        .then(res => {
-            console.log(res.data.role_user);
-            setLoading(false);
-            setUserStaffs(res.data.role_user);
-        // this.setState({
-        //     items: res.data,  /*set response data in items array*/
-        //     isLoaded : true,
-        //     redirectToReferrer: false
-        // })
+    const config = {
+      headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+    };
+
+    fetch(`${baseURL}v1/roles`, config)
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          console.log(data);
+          setLoading(false);
+          setRoles(data.roles);
         },
         (error) => {
           setLoading(false);
-          setError(error);
-        })
-    
-    // fetch({`http://192.168.88.246:3001/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
-      // .then((response) => response.json())
-      // .then(
-      //   (data) => {
-      //     setLoading(false);
-      //     // setuserStaffs(data.clients);
-      //     console.log(data);
-      //   },
-      //   (error) => {
-      //     setLoading(false);
-      //     setError(error);
-      //   }
-      // );
+          console.error("Error fetching roles:", error);
+        }
+      );
   }, []);
-
-  // useEffect(() => {
-  //   fetch("http://192.168.88.246:3001/api/v1/staff")
-  //     .then((response) => response.json())
-  //     .then(
-  //       (data) => {
-  //         setLoading(false);
-  //         setStaffs(data.staff);
-  //         console.log(data.staff);
-  //       },
-  //       (error) => {
-  //         setLoading(false);
-  //         setError(error);
-  //       }
-  //     );
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -97,17 +67,17 @@ function Staff() {
                 <div className="mb-1 w-full">
                   <div className="mb-4">
                     <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                      Staff
+                      Roles
                     </h1>
                   </div>
                   <div className="sm:flex">
                     <div className="hidden sm:flex items-center sm:divide-x sm:divide-gray-100 mb-3 sm:mb-0">
                       <form className="lg:pr-3">
-                        <label htmlFor="staffSearch" className="sr-only">
+                        <label htmlFor="roleSearch" className="sr-only">
                           Search
                         </label>
                         <div className="mt-1 relative lg:w-64 xl:w-96">
-                          <input onChange={(e) => {setSearchTerm(e.target.value)}} type="text" name="email" id="staffSearch" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Search for staff"/>
+                          <input onChange={(e) => {setSearchTerm(e.target.value)}} type="text" name="email" id="roleSearch" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Search for role"/>
                         </div>
                       </form>
                       <div className="flex space-x-1 pl-0 sm:pl-2 mt-3 sm:mt-0">
@@ -138,10 +108,10 @@ function Staff() {
                         <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
                         </svg>
-                        Add staff
+                        Add role
                       </button>
-                      <Dialog open={openAddStaffDialog} onClose={handleClose}>
-                        {editable ? (<EditStaff staffId={staffId} />) : (<NewStaff />)}
+                      <Dialog open={openAddRoleDialog} onClose={handleClose}>
+                        {editable ? (<EditRole roleId={roleId} />) : (<NewRole />)}
                       </Dialog>
 
                       <a href="/" className="w-1/2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
@@ -187,15 +157,13 @@ function Staff() {
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                          {userStaffs.filter((userStaff) => {
+                          {roles.filter((role) => {
                               if (searchTerm === "") {
-                                return userStaff;
-                              } else if (userStaff.first_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return userStaff
-                              } else if (userStaff.last_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return userStaff
-                              }}).map((userStaff) => (
-                            <tr className="hover:bg-gray-100" key={userStaff.user_id}>
+                                return role;
+                              } else if (role.role_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                                return role
+                              }}).map((role) => (
+                            <tr className="hover:bg-gray-100" key={role.role_id}>
                               <td className="p-4 w-4">
                                 <div className="flex items-center">
                                   <input id="checkbox-1" aria-describedby="checkbox-1" type="checkbox" className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"/>
@@ -205,21 +173,21 @@ function Staff() {
                                 </div>
                               </td>
                               <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
-                                <img className="h-10 w-10 rounded-full" src={userStaff.user_photo_url || require('../profileIcon.jpg')} alt={userStaff.first_name}/>
+                                {/* <img className="h-10 w-10 rounded-full" src={role.user_photo_url || require('../profileIcon.jpg')} alt={role.first_name}/> */}
                                 <div className="text-sm font-normal text-gray-500">
                                   <div className="text-base font-semibold text-gray-900">
-                                  {userStaff.first_name + " " + userStaff.last_name}
+                                  {role.role_name}
                                   </div>
                                   <div className="text-sm font-normal text-gray-500">
-                                    {userStaff.staff_email}
+                                    {/* {role.role_email} */}
                                   </div>
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {userStaff.staff_position}
+                                {/* {role.role_position} */}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {"+254" + userStaff.staff_mobile}
+                                {/* {"+254" + role.role_mobile} */}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                 <div className="flex items-center">
@@ -228,7 +196,7 @@ function Staff() {
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
-                                <button type="button" onClick={() => {handleClickOpen(userStaff.user_id); setEditable(true); setStaffId(userStaff.user_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <button type="button" onClick={() => {handleClickOpen(role.role_id); setEditable(true); setRoleId(role.role_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                     <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>
@@ -296,4 +264,4 @@ function Staff() {
   }
 }
 
-export default Staff;
+export default Roles;

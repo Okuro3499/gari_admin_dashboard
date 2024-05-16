@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import baseURL from '../utils/Config.js';
 import Dialog from '@mui/material/Dialog';
 import { BallTriangle } from "react-loader-spinner";
 import EditPartner from "../components/Partners/EditPartner";
@@ -11,11 +12,29 @@ import Cookies from "js-cookie";
 function Partners() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userPartners, setUserPartners] = useState([]);
+  const [partners, setPartners] = useState([]);
   const [openAddPartnerDialog, setOpenAddPartnerDialog] = useState(false);
   const [editable, setEditable] = useState(false);
   const [partnerId, setPartnerId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const partnersPerPage = 20;
+
+  const getStatusColorClass = (status) => {
+    if (!status) {
+      return "bg-gray-400";
+    }
+    switch (status.toLowerCase()) {
+      case "awaiting approval":
+        return "bg-yellow-300";
+      case "active":
+        return "bg-green-400";
+      case "inactive":
+        return "bg-red-600";
+      default:
+        return "bg-gray-400";
+    }
+  };
 
   const handleClickOpen = () => {
     setOpenAddPartnerDialog(true);
@@ -26,58 +45,27 @@ function Partners() {
   };
 
   useEffect(() => {
-    const api = `http://192.168.88.246:3001/api/v1/users/role/3`
+    const api = `${baseURL}v1/companies`
     axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
-        .then(res => {
-            console.log(res.data.role_user);
-            setLoading(false);
-            setUserPartners(res.data.role_user);
-        // this.setState({
-        //     items: res.data,  /*set response data in items array*/
-        //     isLoaded : true,
-        //     redirectToReferrer: false
-        // })
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        })
-    
-    // fetch({`http://192.168.88.246:3001/api/v1/users/role/2`, headers: {"Authorization" : `Bearer ${Cookies.get("token")}`}})
-      // .then((response) => response.json())
-      // .then(
-      //   (data) => {
-      //     setLoading(false);
-      //     // setuserPartners(data.clients);
-      //     console.log(data);
-      //   },
-      //   (error) => {
-      //     setLoading(false);
-      //     setError(error);
-      //   }
-      // );
+    .then(res => {
+      console.log(res.data.companies);
+      setLoading(false);
+      setPartners(res.data.companies);
+    },
+    (error) => {
+      setLoading(false);
+      setError(error);
+    })
   }, []);
-  
-  // useEffect(() => {
-  //   fetch("http://192.168.88.246:3001/api/v1/partners")
-  //     .then((response) => response.json())
-  //     .then(
-  //       (data) => {
-  //         setLoading(false);
-  //         setPartners(data.partners);
-  //         console.log(data.partners);
-  //       },
-  //       (error) => {
-  //         setLoading(false);
-  //         setError(error);
-  //       }
-  //     );
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else {
+    const indexOfLastPartner = currentPage * partnersPerPage;
+    const indexOfFirstPartner = indexOfLastPartner - partnersPerPage;
+    const totalPages = Math.ceil(partners.length / partnersPerPage);
+    const hasNextPage = currentPage < totalPages;
+    const hasPreviousPage = currentPage > 1;
     return (
       <div>
         <SideBar />
@@ -185,15 +173,15 @@ function Partners() {
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                          {userPartners.filter((userPartner) => {
+                          {partners.filter((partner) => {
                               if (searchTerm === "") {
-                                return userPartner;
-                              } else if (userPartner.partner_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return userPartner;
-                              } else if (userPartner.partner_email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return userPartner;
-                              }}).map((userPartner) => (
-                            <tr className="hover:bg-gray-100" key={userPartner.user_id}>
+                                return partner;
+                              } else if (partner.partner_name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                return partner;
+                              } else if (partner.partner_email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                return partner;
+                              }}).map((partner) => (
+                            <tr className="hover:bg-gray-100" key={partner.user_id}>
                               <td className="p-4 w-4"> 
                                 <div className="flex items-center">
                                   <input id="checkbox-1" aria-describedby="checkbox-1" type="checkbox" className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"/>
@@ -205,27 +193,27 @@ function Partners() {
                               <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-2 lg:mr-0">
                                 <div className="text-sm font-normal text-gray-500">
                                   <div className="text-base font-semibold text-gray-900">
-                                    {userPartner.first_name + " " + userPartner.last_name}
+                                    {partner.company_name}
                                   </div>
                                   <div className="text-sm font-normal text-gray-500">
-                                  {userPartner.email}
+                                  {partner.email}
                                   </div>
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {userPartner.partner_physical_address}
+                                {partner.company_location}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                              {"+254" + userPartner.mobile}
+                              {"+254" + partner.phone_number}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                 <div className="flex items-center">
-                                  <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"/>
-                                  Active
-                                </div>
+                                  <div className={`h-2.5 w-2.5 rounded-full ${getStatusColorClass(partner.status)} mr-2`} />
+                                    {partner.status}
+                                  </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
-                                <button type="button" onClick={() => { handleClickOpen(); setEditable(true); setPartnerId(userPartner.user_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <button type="button" onClick={() => { handleClickOpen(); setEditable(true); setPartnerId(partner.user_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                     <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>
@@ -252,38 +240,27 @@ function Partners() {
                 </div>
               </div>
               <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
-                <div className="flex items-center mb-4 sm:mb-0">
-                  <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
-                    <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                  </svg>
-                  </a>
-                  <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2">
-                    <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </a>
-                  <span className="text-sm font-normal text-gray-500">
-                    Showing{" "}
-                    <span className="text-gray-900 font-semibold">1-20</span> of{" "}
-                    <span className="text-gray-900 font-semibold">2290</span>
-                  </span>
+                  <div className="flex items-center mb-4 sm:mb-0">
+                    <span className="text-sm font-normal text-gray-500">
+                      Showing{" "}
+                      <span className="text-gray-900 font-semibold">{indexOfFirstPartner + 1} - {indexOfLastPartner > partners.length ? partners.length : indexOfLastPartner}</span>{" "}
+                      of{" "}
+                      <span className="text-gray-900 font-semibold">{partners.length}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    {hasPreviousPage && (
+                    <button onClick={() => setCurrentPage(currentPage - 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                      Previous
+                    </button>
+                    )}
+                    {hasNextPage && (
+                    <button onClick={() => setCurrentPage(currentPage + 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                      Next
+                    </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                    <svg className="-ml-1 mr-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                    </svg>
-                    Previous
-                  </a>
-                  <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                    Next
-                    <svg className="-mr-1 ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
             </main>
           </div>
         )}

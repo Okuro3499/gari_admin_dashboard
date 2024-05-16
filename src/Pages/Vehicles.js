@@ -5,13 +5,18 @@ import Dialog from '@mui/material/Dialog';
 import { Link } from "react-router-dom";
 import NewVehicle from "../components/Vehicle/NewVehicle";
 import SideBar from "../components/SideBar";
+import Cookies from "js-cookie";
+import Select from "react-select";
 
 function Vehicles() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cars, setCars] = useState([]);
+  const [initialCars, setInitialCars] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openAddCarDialog, setOpenAddCarDialog] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState({ value: "", label: "All" });
+  const [companies, setCompanies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const carsPerPage = 20;
 
@@ -27,17 +32,73 @@ function Vehicles() {
     setOpenAddCarDialog(false);
   };
 
-  useEffect(() => {
-    fetch(`${baseURL}v1/cars`)
+  const handleCompanyChange = (selectedOption) => {
+    setSelectedCompany(selectedOption);
+
+    if (selectedOption.value === "") {
+      setCars(initialCars);
+      setLoading(false);
+    } else {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ company_id: selectedOption.value }),
+      };
+
+      fetch(`${baseURL}v1/cars/company`, requestOptions)
       .then((response) => response.json())
       .then(
         (data) => {
           setLoading(false);
           setCars(data.cars);
+          console.log(data.cars)
         },
         (error) => {
           setLoading(false);
           setError(error);
+        }
+      );
+    }
+  };
+
+  const companyDropdown  = [
+    { value: "", label: "All" },
+    ...companies.map((company) => ({
+      value: company.company_id,
+      label: company.company_name,
+    })),
+  ];
+
+  useEffect(() => {
+    const config = {
+      headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+    };
+
+    fetch(`${baseURL}v1/cars`)
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          setLoading(false);
+          setInitialCars(data.cars);
+          setCars(data.cars);
+          console.log(data.cars)
+        },
+        (error) => {
+          setLoading(false);
+          setError(error);
+        }
+      );
+
+      fetch(`${baseURL}v1/companies`, config)
+      .then((response) => response.json())
+      .then(
+        (data) => {
+          setCompanies(data.companies);
+        },
+        (error) => {
+          console.error("Error fetching companies:", error);
         }
       );
   }, []);
@@ -69,7 +130,7 @@ function Vehicles() {
                   <div className="mb-1 w-full">
                     <div className="mb-4">
                       <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                        All Vehicles
+                        {selectedCompany.value === "" ? "All vehicles" :`${selectedCompany.label}'s vehicles`}
                       </h1>
                     </div>
                     <div className="block sm:flex items-center md:divide-x md:divide-gray-100">
@@ -110,6 +171,9 @@ function Vehicles() {
                           </svg>
                           Add Vehicle
                         </button>
+                        <div className="flex flex-col w-full ml-2 md:w-1/3 lg:w-1/3">
+                          <Select placeholder="Pick Company" value={selectedCompany} options={companyDropdown} onChange={handleCompanyChange}/>
+                        </div>
 
                         <Dialog open={openAddCarDialog} onClose={handleClose}>
                           <NewVehicle onSuccess={handleCloseNewVehicleDialog} />
