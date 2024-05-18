@@ -1,111 +1,70 @@
-import React, { useState, useEffect, useRef } from "react";
-import baseURL from '../utils/Config.js';
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-import { BallTriangle } from "react-loader-spinner";
-import { useLocation } from "react-router-dom";
-import Dialog from '@mui/material/Dialog';
-import Cookies from "js-cookie";
-import Select from "react-select";
-import DatePicker from "react-datetime";
-import moment from "moment";
-import "react-datetime/css/react-datetime.css";
-import SideBar from "../components/SideBar";
-import axios from "axios";
+import React, { useState, useEffect, useRef } from "react" 
+import baseURL from '../utils/Config.js' 
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai" 
+import { BallTriangle } from "react-loader-spinner" 
+import { useLocation } from "react-router-dom" 
+import Dialog from '@mui/material/Dialog' 
+import Cookies from "js-cookie" 
+import Select from "react-select" 
+import DatePicker from "react-datetime" 
+import moment from "moment" 
+import "react-datetime/css/react-datetime.css" 
+import SideBar from "../components/SideBar" 
+import axios from "axios" 
+import EditVehicle from "../components/Vehicle/EditVehicle" 
 
-import EditVehicle from "../components/Vehicle/EditVehicle";
-
-let count = 0;
-let slideInterval;
+let count = 0 
+let slideInterval 
 
 function VehicleDetails(props) {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null) 
+  const [loading, setLoading] = useState(true) 
   const [carDetails, setCarDetails] = useState({
-    car_id: "",
-    car_name: "",
-    status: "",
-    transmission: "",
-    engine: "",
-    color: "",
-    registration: "",
-    passengers: "",
-    company: "",
-    price: "",
-    doors: "",
-    drive: "",
-    carImages: [],
-    features: [],
-    created_by: "",
-    created_on: "",
-    modified_by: "",
-    last_modified_on: ""
-  });
+    car_id: "", car_name: "", status: "", transmission: "",
+    engine: "", color: "", registration: "", passengers: "",
+    company: "", price: "", doors: "", drive: "", carImages: [], 
+    features: [], created_by: "", created_on: "", modified_by: "", last_modified_on: ""
+  }) 
   
   const [booking, setBooking] = useState({
-    car_id: "",
-    client_id: "",
-    book_date_from: "",
-    book_date_to: "",
-    destination: "",
-    drive: "",
-    total_days: 0,
-    total_amount: 0,
-  });
-  const [openAddCarDialog, setOpenAddCarDialog] = useState(false);
-  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [driveSelected, setDriveSelected] = useState(null);
-  const [spin, setSpin] = useState(false);
-  // const [dateFrom, setDateFrom] = useState("");
-  // const [dateTo, setDateTo] = useState("");
-  const [totalDays, setTotalDays] = useState(0);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [users, setUsers] = useState([]);
-  const [userSelected, setUserSelected] = useState(null);
-  const [carImages, setCarImages] = useState([]);
+    car_id: "", client_id: "", book_date_from: "",
+    book_date_to: "", destination: "", drive: "",
+    total_days: 0, total_amount: 0
+  }) 
+  const [openAddCarDialog, setOpenAddCarDialog] = useState(false) 
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false) 
+  const [currentIndex, setCurrentIndex] = useState(0) 
+  const [driveSelected, setDriveSelected] = useState(null) 
+  const [spin, setSpin] = useState(false)
+  const [totalDays, setTotalDays] = useState(0) 
+  const [totalAmount, setTotalAmount] = useState(0) 
+  const [users, setUsers] = useState([]) 
+  const [userSelected, setUserSelected] = useState(null) 
+  const [carImages, setCarImages] = useState([]) 
 
-  const driveDropdown = [
-    {
-      value: "Self Drive",
-      label: "Self Drive",
-    },
-    {
-      value: "Chauffered",
-      label: "Chauffered",
-    },
-    {
-      value: "Self Drive & Chauffered",
-      label: "Self Drive & Chauffered",
-    },
-  ];
+  const driveDropdown = [{
+    value: "Self Drive",
+    label: "Self Drive"
+  }, {
+    value: "Chauffered",
+    label: "Chauffered"
+  }, {
+    value: "Self Drive & Chauffered",
+    label: "Self Drive & Chauffered"
+  }] 
 
-  const slideRef = useRef();
-
-  // const removeAnimation = () => {
-  //   slideRef.current.classList.remove("fade-anim");
-  // };
+  const slideRef = useRef() 
 
   const handleClickOpen = () => {
-    setOpenAddCarDialog(true);
-  };
+    setOpenAddCarDialog(true) 
+  } 
 
   const handleClose = () => {
-    setOpenAddCarDialog(false);
-  };
+    setOpenAddCarDialog(false) 
+  } 
 
   const openConfirmation = (e) => {
-    // setOpenConfirmationDialog(true);
-    // const startDate = moment(booking.book_date_from);
-    // const timeEnd = moment(booking.book_date_to);
-    // const diff = timeEnd.diff(startDate);
-    // const diffDuration = moment.duration(diff);
-    // const days = diffDuration.days();
-    // setBooking({ ...booking, total_days: days});
-    // setBooking({ ...booking, total_amount: booking.total_days * carDetails.price});
-
-    // console.log(booking.total_days)
-
-    e.preventDefault();
+    e.preventDefault() 
     const bookingData = {
       car_id: carDetails.car_id,
       client_id: userSelected.value,
@@ -114,53 +73,48 @@ function VehicleDetails(props) {
       destination: booking.destination,
       drive: driveSelected.value,
       total_days: booking.total_days,
-      total_amount: booking.total_days,
-    };
-    console.log(bookingData);
-  };
+      total_amount: booking.total_days
+    } 
+    console.log(bookingData) 
+  } 
 
   const closeConfirmation = () => {
-    setOpenConfirmationDialog(false);
-  };
+    setOpenConfirmationDialog(false) 
+  } 
 
   const handleDriveChange = (e) => {
-    setDriveSelected(e);
-  };
+    setDriveSelected(e) 
+  } 
 
   const handleFrom = (date) => {
-    setBooking({ ...booking, book_date_from: date._d });
-    console.log(date);
-  };
-  console.log("start" + booking.book_date_from);
+    setBooking({ ...booking, book_date_from: date._d }) 
+    console.log(date) 
+  } 
+  console.log("start" + booking.book_date_from) 
 
   const handleTo = (date) => {
-    setBooking({ ...booking, book_date_to: date._d });
-    const startDate = moment(booking.book_date_from);
-    const timeEnd = moment(booking.book_date_to);
-    const diff = timeEnd.diff(startDate);
-    const diffDuration = moment.duration(diff);
-    const days = diffDuration.days();
-    setTotalDays(days || 0);
-    setTotalAmount(days * carDetails.price || 0);
-    // console.log("start" + startDate);
-    // console.log("end" + timeEnd);
-    // console.log("diff" + days);
-    // }, 2000);
-  };
+    setBooking({ ...booking, book_date_to: date._d }) 
+    const startDate = moment(booking.book_date_from) 
+    const timeEnd = moment(booking.book_date_to) 
+    const diff = timeEnd.diff(startDate) 
+    const diffDuration = moment.duration(diff) 
+    const days = diffDuration.days() 
+    setTotalDays(days || 0) 
+    setTotalAmount(days * carDetails.price || 0)
+  } 
 
-  console.log("end" + booking.book_date_to);
+  console.log("end" + booking.book_date_to) 
 
   const handleChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value 
     setBooking({
       ...data,
       [e.target.name]: value,
-    });
-  };
+    }) 
+  } 
 
   const handleBooking = (e) => {
-    // setSpin(true);
-    e.preventDefault();
+    e.preventDefault() 
     const bookingData = {
       car_id: carDetails.car_id,
       client_id: userSelected.value,
@@ -170,53 +124,53 @@ function VehicleDetails(props) {
       drive: driveSelected.value,
       total_days: totalDays,
       total_amount: totalAmount,
-    };
-    console.log(bookingData);
-  };
+    } 
+    console.log(bookingData) 
+  } 
 
-  const yesterday = moment().subtract(1, "day");
+  const yesterday = moment().subtract(1, "day") 
   const disableFromDt = (current) => {
-    return current.isAfter(yesterday);
-  };
+    return current.isAfter(yesterday) 
+  } 
 
   const disableToDt = (current) => {
-    return current.isAfter(yesterday);
-  };
+    return current.isAfter(yesterday) 
+  } 
 
   const handleUserChange = (e) => {
-    setUserSelected(e);
-    console.log(userSelected.value);
-  };
+    setUserSelected(e) 
+    console.log(userSelected.value) 
+  } 
 
   const startSlider = () => {
     if (carImages.length > 1) {
       slideInterval = setInterval(() => {
-        handleOnNextClick();
-      }, 5000);
+        handleOnNextClick() 
+      }, 5000) 
     }
-  };
+  } 
   
   const pauseSlider = () => {
-    clearInterval(slideInterval);
-  };
+    clearInterval(slideInterval) 
+  } 
 
   const handleOnNextClick = () => {
-    setCurrentIndex((currentIndex + 1) % carImages.length);
-    console.log("New currentIndex:", (currentIndex + 1) % carImages.length);
-  };
+    setCurrentIndex((currentIndex + 1) % carImages.length) 
+    console.log("New currentIndex:", (currentIndex + 1) % carImages.length) 
+  } 
   
   const handleOnPrevClick = () => {
-    setCurrentIndex((currentIndex + carImages.length - 1) % carImages.length);
-    console.log("New currentIndex:", (currentIndex - 1) % carImages.length);
-  };
+    setCurrentIndex((currentIndex + carImages.length - 1) % carImages.length) 
+    console.log("New currentIndex:", (currentIndex - 1) % carImages.length) 
+  } 
 
-  const location = useLocation();
-  const data = location.state?.data;
-  console.log(data);
+  const location = useLocation() 
+  const data = location.state?.data 
+  console.log(data) 
 
   useEffect(() => {
     if (data) {
-      const images = data.car_images.map(image => ({ src: image }));
+      const images = data.car_images.map(image => ({ src: image })) 
       setCarImages(images)
       setCarDetails(prevState => ({
         ...prevState,
@@ -237,45 +191,43 @@ function VehicleDetails(props) {
         created_by: data.created_by.toString(),
         created_on: new Date(data.created_date).toLocaleDateString(),
         modified_by: data.modified_by ? data.modified_by.toString() : null,
-        last_modified_on: new Date(data.modified_date).toLocaleDateString(),
-      }));
+        last_modified_on: new Date(data.modified_date).toLocaleDateString()
+      })) 
     }
 
     const roleId = {
       role_id: "2"
-    };
+    } 
     const api = `${baseURL}v1/users/role`
     axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} }, roleId)
-        .then(res => {
-            console.log(res.data.role_user);
-            setLoading(false);
-            setUsers(res.data.role_user);
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        })
-  }, [data]);
-
-  useEffect(() => {
-    startSlider();
-    return () => {
-      pauseSlider();
-    };
-    // eslint-disable-next-line
-  }, []);
-
-  let userOptions = users.map(function (user) {
-    return {
-      value: user.client_id,
-      label: user.first_name + " " + user.last_name + ": +254" + user.mobile,
-    };
-  });
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else {
-    return (
+      .then(res => {
+        console.log(res.data.role_user)
+        setLoading(false) 
+        setUsers(res.data.role_user) 
+      }, (error) => {
+        setLoading(false) 
+        setError(error) 
+      })
+    }, [data])
+    
+    useEffect(() => {
+      startSlider()
+      return () => {
+        pauseSlider() 
+      } 
+    }, [])
+    
+    let userOptions = users.map(function (user) {
+      return {
+        value: user.client_id,
+        label: user.first_name + " " + user.last_name + ": +254" + user.mobile
+      }
+    })
+    
+    if (error) {
+      return <div>Error: {error.message}</div>
+    } else {
+      return (
       <div>
         <SideBar />
         <Dialog open={openConfirmationDialog} onClose={closeConfirmation}>
@@ -332,17 +284,14 @@ function VehicleDetails(props) {
                             </div>
                             {carDetails.carImages.length > 1 && (
                             <div>
-                              {/* <!-- The previous button --> */}
                               <button className="absolute left-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer" onClick={handleOnPrevClick}>
                                 <AiOutlineArrowLeft size={20} />
                               </button>
-                              {/* <!-- The next button --> */}
                               <button className="absolute right-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer" onClick={handleOnNextClick}>
                                 <AiOutlineArrowRight size={20} />
                               </button>
                             </div>
                             )}
-                              
                             </div>
 
                             <div className="sm:grid grid-cols-2 gap-x-4 max-w-4xl mx-auto">
@@ -479,8 +428,8 @@ function VehicleDetails(props) {
           )}
         </div>
       </div>
-    );
+    ) 
   }
 }
 
-export default VehicleDetails;
+export default VehicleDetails 

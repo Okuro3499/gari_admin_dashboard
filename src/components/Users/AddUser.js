@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import baseURL from '../../utils/Config.js';
-import Cookies from "js-cookie";
-import Select from "react-select";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from "react"
+import baseURL from '../../utils/Config.js'
+import Cookies from "js-cookie"
+import Select from "react-select"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const NewUser = ({ onSuccess }) => {
     const [selectedRole, setSelectedRole] = useState([])
@@ -18,7 +18,7 @@ const NewUser = ({ onSuccess }) => {
             value: role.role_id,
             label: role.role_name
         }))
-    ];
+    ]
     
     useEffect(() => {
         const config = { headers: { Authorization: `Bearer ${Cookies.get("token")}` } }
@@ -72,4 +72,4 @@ const NewUser = ({ onSuccess }) => {
     )
 }
 
-export default NewUser;
+export default NewUser

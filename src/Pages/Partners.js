@@ -1,71 +1,71 @@
-import React, { useState, useEffect } from "react";
-import baseURL from '../utils/Config.js';
-import Dialog from '@mui/material/Dialog';
-import { BallTriangle } from "react-loader-spinner";
-import EditPartner from "../components/Partners/EditPartner";
-import NewPartner from "../components/Partners/NewPartner";
-import SideBar from "../components/SideBar";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from "react" 
+import baseURL from '../utils/Config.js' 
+import Dialog from '@mui/material/Dialog' 
+import { BallTriangle } from "react-loader-spinner" 
+import EditPartner from "../components/Partners/EditPartner" 
+import NewPartner from "../components/Partners/NewPartner" 
+import SideBar from "../components/SideBar" 
+import { Link } from "react-router-dom" 
+import axios from "axios" 
+import Cookies from "js-cookie" 
 
 function Partners() {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [partners, setPartners] = useState([]);
-  const [openAddPartnerDialog, setOpenAddPartnerDialog] = useState(false);
-  const [editable, setEditable] = useState(false);
-  const [partnerId, setPartnerId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const partnersPerPage = 20;
+  const [error, setError] = useState(null) 
+  const [loading, setLoading] = useState(true) 
+  const [partners, setPartners] = useState([]) 
+  const [openAddPartnerDialog, setOpenAddPartnerDialog] = useState(false) 
+  const [editable, setEditable] = useState(false) 
+  const [partnerId, setPartnerId] = useState(null) 
+  const [searchTerm, setSearchTerm] = useState("") 
+  const [currentPage, setCurrentPage] = useState(1) 
+  const partnersPerPage = 20 
 
   const getStatusColorClass = (status) => {
     if (!status) {
-      return "bg-gray-400";
+      return "bg-gray-400" 
     }
     switch (status.toLowerCase()) {
       case "awaiting approval":
-        return "bg-yellow-300";
+        return "bg-yellow-300" 
       case "active":
-        return "bg-green-400";
+        return "bg-green-400" 
       case "inactive":
-        return "bg-red-600";
+        return "bg-red-600" 
       default:
-        return "bg-gray-400";
+        return "bg-gray-400" 
     }
-  };
+  } 
 
   const handleClickOpen = () => {
-    setOpenAddPartnerDialog(true);
-  };
+    setOpenAddPartnerDialog(true) 
+  } 
 
   const handleClose = () => {
-    setOpenAddPartnerDialog(false);
-  };
+    setOpenAddPartnerDialog(false) 
+  } 
 
   useEffect(() => {
     const api = `${baseURL}v1/companies`
     axios.get(api, { headers: {"Authorization" : `Bearer ${Cookies.get("token")}`} })
     .then(res => {
-      console.log(res.data.companies);
-      setLoading(false);
-      setPartners(res.data.companies);
+      console.log(res.data.companies) 
+      setLoading(false) 
+      setPartners(res.data.companies) 
     },
     (error) => {
-      setLoading(false);
-      setError(error);
+      setLoading(false) 
+      setError(error) 
     })
-  }, []);
+  }, []) 
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error.message}</div> 
   } else {
-    const indexOfLastPartner = currentPage * partnersPerPage;
-    const indexOfFirstPartner = indexOfLastPartner - partnersPerPage;
-    const totalPages = Math.ceil(partners.length / partnersPerPage);
-    const hasNextPage = currentPage < totalPages;
-    const hasPreviousPage = currentPage > 1;
+    const indexOfLastPartner = currentPage * partnersPerPage 
+    const indexOfFirstPartner = indexOfLastPartner - partnersPerPage 
+    const totalPages = Math.ceil(partners.length / partnersPerPage) 
+    const hasNextPage = currentPage < totalPages 
+    const hasPreviousPage = currentPage > 1 
     return (
       <div>
         <SideBar />
@@ -121,7 +121,7 @@ function Partners() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-3 ml-auto">
-                      <button type="button" onClick={() => {handleClickOpen(); setEditable(false);}} className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
+                      <button type="button" onClick={() => {handleClickOpen();  setEditable(false) }} className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
                         <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
                         </svg>
@@ -175,11 +175,11 @@ function Partners() {
                         <tbody className="bg-white divide-y divide-gray-200">
                           {partners.filter((partner) => {
                               if (searchTerm === "") {
-                                return partner;
+                                return partner 
                               } else if (partner.partner_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return partner;
+                                return partner 
                               } else if (partner.partner_email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                return partner;
+                                return partner 
                               }}).map((partner) => (
                             <tr className="hover:bg-gray-100" key={partner.user_id}>
                               <td className="p-4 w-4"> 
@@ -213,7 +213,7 @@ function Partners() {
                                   </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
-                                <button type="button" onClick={() => { handleClickOpen(); setEditable(true); setPartnerId(partner.user_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <button type="button" onClick={() => { handleClickOpen(); setEditable(true); setPartnerId(partner.user_id) }} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                     <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>
@@ -224,7 +224,6 @@ function Partners() {
                                     <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/>
                                   </svg>
                                 </button>
-                                {/* state={{ data: client.client_id }}  */}
                                 <Link to="/" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" d="M.2 10a11 11 0 0 1 19.6 0A11 11 0 0 1 .2 10zm9.8 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" clipRule="evenodd"/>
@@ -266,8 +265,8 @@ function Partners() {
         )}
         </div>
       </div>
-    );
+    ) 
   }
 }
 
-export default Partners;
+export default Partners 

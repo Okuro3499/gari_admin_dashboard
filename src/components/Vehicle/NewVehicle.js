@@ -1,54 +1,50 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import baseURL from '../../utils/Config.js';
-import Select from "react-select";
-import Success from "../Success";
-import Dialog from '@mui/material/Dialog';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import cloudinaryConfig from "../../utils/Cloudinary";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from "react"
+import axios from "axios"
+import baseURL from '../../utils/Config.js'
+import Select from "react-select"
+import Success from "../Success"
+import Dialog from '@mui/material/Dialog'
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import cloudinaryConfig from "../../utils/Cloudinary"
+import Cookies from "js-cookie"
 
 const predefinedTags = ['Automatic Emergency Braking', 'Lane Departure Warning', 'Adaptive Cruise Control', 'Blind Spot Monitoring', 'Rear Cross-Traffic Alert', 
 'Parking Assistance', 'Backup Camera', 'Keyless Entry', 'Push Button Start', 'Apple CarPlay', 'Android Auto', 'Bluetooth Connectivity',
 'USB Ports', 'Satellite Radio', 'Navigation System', 'Leather Seats', 'Heated Seats', 'Power Adjustable Seats', 'Sunroof', 'LED Headlights', 
-'Fog Lights', 'Rain-Sensing Wipers', 'Hands-Free Liftgate'];
+'Fog Lights', 'Rain-Sensing Wipers', 'Hands-Free Liftgate']
 
 const NewVehicle = ({ onSuccess }) => {
   const [data, setData] = useState({
     car_name: "", status: "", transmission: "", color: "", registration: "", passengers: "", company_id: "", price: "", doors: "", drive: "", car_images: [], features: [], CC: "", fuel: ""
-  });
-  const [carImagesUrl, setCarImagesUrl] = useState("");
-  const [numFiles, setNumFiles] = useState(0);
-  const [statusSelected, setStatusSelected] = useState(null);
-  const [transmissionSelected, setTransmissionSelected] = useState(null);
-  const [fuelSelected, setFuelSelected] = useState(null);
-  const [driveSelected, setDriveSelected] = useState(null);
-  const [images, setImages] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [inputValue, setInputValue] = useState('');
-  const [filteredTags, setFilteredTags] = useState(predefinedTags);
-  const [companies, setCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const [spin, setSpin] = useState(false);
-  const [spin1, setSpin1] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  })
+  const [carImagesUrl, setCarImagesUrl] = useState("")
+  const [numFiles, setNumFiles] = useState(0)
+  const [statusSelected, setStatusSelected] = useState(null)
+  const [transmissionSelected, setTransmissionSelected] = useState(null)
+  const [fuelSelected, setFuelSelected] = useState(null)
+  const [driveSelected, setDriveSelected] = useState(null)
+  const [images, setImages] = useState([])
+  const [imagePreviews, setImagePreviews] = useState([])
+  const [tags, setTags] = useState([])
+  const [inputValue, setInputValue] = useState('')
+  const [filteredTags, setFilteredTags] = useState(predefinedTags)
+  const [companies, setCompanies] = useState([])
+  const [selectedCompany, setSelectedCompany] = useState(null)
+  const [spin, setSpin] = useState(false)
+  const [spin1, setSpin1] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
-  const statusDropdown = [
-    {
-      value: "Available",
-      label: "Available",
-    },
-    {
-      value: "Booked",
-      label: "Booked",
-    },
-  ];
+  const statusDropdown = [{
+    value: "Available",
+    label: "Available"
+  }, {
+    value: "Booked",
+    label: "Booked"
+  }]
 
-  const transmissionDropdown = [
-    {
+  const transmissionDropdown = [{
       value: "Automatic",
       label: "Automatic",
     },
@@ -56,167 +52,156 @@ const NewVehicle = ({ onSuccess }) => {
       value: "Manual",
       label: "Manual",
     },
-  ];
+  ]
 
-  const driveDropdown = [
-    {
-      value: "Self Drive",
-      label: "Self Drive",
-    },
-    {
-      value: "Chauffered",
-      label: "Chauffered",
-    },
-    {
-      value: "Self Drive & Chauffered",
-      label: "Self Drive & Chauffered",
-    },
-  ];
+  const driveDropdown = [{
+    value: "Self Drive",
+    label: "Self Drive"
+  }, {
+    value: "Chauffered",
+    label: "Chauffered"
+  }, {
+    value: "Self Drive & Chauffered",
+    label: "Self Drive & Chauffered"
+  }]
 
-  const fuelDropdown = [
-    {
-      value: "Electric",
-      label: "Electric",
-    },
-    {
-      value: "Petrol",
-      label: "Petrol",
-    },
-    {
-      value: "Diesel",
-      label: "Diesel",
-    },
-  ];
+  const fuelDropdown = [{
+    value: "Electric",
+    label: "Electric"
+  }, {
+    value: "Petrol",
+    label: "Petrol"
+  }, {
+    value: "Diesel",
+    label: "Diesel"
+  }]
 
- 
   const handleSuccessClose = () => {
-    setSuccess(false);
-  };
+    setSuccess(false)
+  }
 
   const handleStatusChange = (e) => {
-    setStatusSelected(e);
-  };
+    setStatusSelected(e)
+  }
 
   const handleTransmissionChange = (e) => {
-    setTransmissionSelected(e);
-  };
+    setTransmissionSelected(e)
+  }
 
   const handleFuelChange = (e) => {
-    setFuelSelected(e);
-  };
+    setFuelSelected(e)
+  }
 
   const handleDriveChange = (e) => {
-    setDriveSelected(e);
-  };
+    setDriveSelected(e)
+  }
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value,
-    });
-  };
+    const value = e.target.value
+    setData({ ...data, [e.target.name]: value })
+  }
 
   const handleImageUpload = async () => {
-    setSpin1(true);
+    setSpin1(true)
 
     try {
-      const uploadedImages = [];
+      const uploadedImages = []
 
       for (const file of images) {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', cloudinaryConfig.uploadPreset);
-        formData.append('folder', 'Gari Vehicles');
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('upload_preset', cloudinaryConfig.uploadPreset)
+        formData.append('folder', 'Gari Vehicles')
 
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/upload`, { method: 'POST', body: formData });
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/upload`, { method: 'POST', body: formData })
 
         if (!response.ok) {
-          throw new Error(`Failed to upload image ${file.name}`);
+          throw new Error(`Failed to upload image ${file.name}`)
         }
 
-        const data = await response.json();
-        uploadedImages.push(data.secure_url);
+        const data = await response.json()
+        uploadedImages.push(data.secure_url)
       }
 
-      setCarImagesUrl(uploadedImages);
+      setCarImagesUrl(uploadedImages)
     } catch (error) {
-      console.error('Error uploading images:', error);
+      console.error('Error uploading images:', error)
     } finally {
-      setSpin1(false);
+      setSpin1(false)
     }
-  };
+  }
 
   const handleImageChange = (event) => {
-    const files = event.target.files;
-    const previews = [];
+    const files = event.target.files
+    const previews = []
 
     for (const file of files) {
-      previews.push(URL.createObjectURL(file));
+      previews.push(URL.createObjectURL(file))
     }
 
-    setImagePreviews(previews);
-    setImages(files);
+    setImagePreviews(previews)
+    setImages(files)
 
-    setNumFiles(files.length);
-  };
+    setNumFiles(files.length)
+  }
 
   const handleInputChange = (event) => {
-    const value = event.target.value;
-    setInputValue(value);
-    setFilteredTags(predefinedTags.filter(tag => tag.toLowerCase().includes(value.toLowerCase())));
-  };
+    const value = event.target.value
+    setInputValue(value)
+    setFilteredTags(predefinedTags.filter(tag => tag.toLowerCase().includes(value.toLowerCase())))
+  }
 
   const handleInputKeyDown = (event) => {
     if (event.key === 'Enter') {
-      event.preventDefault();
-      const newTag = inputValue.trim();
+      event.preventDefault()
+      const newTag = inputValue.trim()
       if (newTag) {
-        setTags([...tags, newTag]);
-        setInputValue('');
+        setTags([...tags, newTag])
+        setInputValue('')
       }
     }
-  };
+  }
 
   const handleTagClick = (tag) => {
-    setTags([...tags, tag]);
-    setInputValue('');
-    setFilteredTags(filteredTags.filter((t) => t !== tag));
-  };
+    setTags([...tags, tag])
+    setInputValue('')
+    setFilteredTags(filteredTags.filter((t) => t !== tag))
+  }
 
   const handleImageRemove = (index) => {
-    const updatedPreviews = [...imagePreviews];
-    updatedPreviews.splice(index, 1);
-    setImagePreviews(updatedPreviews);
-    const updatedImages = [...images];
-    updatedImages.splice(index, 1);
-    setImages(updatedImages);
-    setNumFiles(updatedPreviews.length);
-  };
+    const updatedPreviews = [...imagePreviews]
+    updatedPreviews.splice(index, 1)
+    setImagePreviews(updatedPreviews)
+    const updatedImages = [...images]
+    updatedImages.splice(index, 1)
+    setImages(updatedImages)
+    setNumFiles(updatedPreviews.length)
+  }
   
 
   const handleTagRemove = (tagToRemove) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
-  };
+    setTags(tags.filter(tag => tag !== tagToRemove))
+  }
 
   const handleCompanyChange = (selectedOption) => {
-    setSelectedCompany(selectedOption);
-  };
+    setSelectedCompany(selectedOption)
+  }
 
   const companyDropdown = companies.map((company) => ({
     value: company.company_id,
-    label: company.company_name,
-  }));
+    label: company.company_name
+  }))
+
   const imageUpload = () => {
-    toast.success("Upload Successfully", { position: "top-center", autoClose: 5000, hideProgressBar: true, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined});
-  };
+    toast.success("Upload Successfully", { position: "top-center", autoClose: 5000, hideProgressBar: true, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined})
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setSpin(true);
+    e.preventDefault()
+    setSpin(true)
     const config = {
       headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-    };
+    }
 
     const carData = {
       car_name: data.car_name,
@@ -234,39 +219,32 @@ const NewVehicle = ({ onSuccess }) => {
       CC: data.CC,
       fuel: fuelSelected ? fuelSelected.value : "",
       created_by: `${Cookies.get("userId")}`
-    };
-    axios
-      .post(`${baseURL}v1/newcar`, carData, config)
-      .then((response) => {
-        console.log(response);
-        setSuccess(true);
-        setSpin(false);
-        onSuccess(); 
-        toast.success("Car added successfully", { position: "top-center", autoClose: 5000, hideProgressBar: true, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined});
-      });
-  };
+    }
+    axios.post(`${baseURL}v1/newcar`, carData, config)
+    .then((response) => {
+      console.log(response)
+      setSuccess(true)
+      setSpin(false)
+      onSuccess() 
+      toast.success("Car added successfully", { position: "top-center", autoClose: 5000, hideProgressBar: true, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined})
+    })
+  }
 
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-    };
+    }
     fetch(`${baseURL}v1/companies`, config)
-      .then((response) => response.json())
-      .then(
-        (data) => {
-          setCompanies(data.companies);
-        },
-        (error) => {
-          console.error("Error fetching companies:", error);
-        }
-      );
-  }, []);
+    .then((response) => response.json())
+    .then((data) => {
+      setCompanies(data.companies)
+    }, (error) => {
+      console.error("Error fetching companies:", error)
+    })
+  }, [])
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
-      {/* <Dialog open={success} onClose={handleSuccessClose}>
-        <Success />      
-      </Dialog> */}
       <ToastContainer />
       <form>
         <div className="grid gap-4 mb-4 lg:grid-cols-2">
@@ -381,7 +359,7 @@ const NewVehicle = ({ onSuccess }) => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default NewVehicle;
+export default NewVehicle

@@ -1,23 +1,16 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
-import Cookies from "js-cookie";
-import Dashboard from "./Pages/Dashboard";
-// import Footer from "./components/Footer";
-import Vehicles from "./Pages/Vehicles";
-import VehicleDetails from "./Pages/VehicleDetails";
-import Bookings from "./Pages/Bookings";
-import Users from "./Pages/Users";
-import UserDetails from "./Pages/UserDetails";
-import Partners from "./Pages/Partners";
-import Roles from "./Pages/Roles";
-import VehicleTracking from "./Pages/VehicleTracking";
-import Login from "./Pages/Login";
-// import Protected from "./Pages/Protected";
+import React from "react" 
+import { BrowserRouter as Router, Route, Routes, Navigate} from "react-router-dom" 
+import Cookies from "js-cookie" 
+import Dashboard from "./Pages/Dashboard" 
+import Vehicles from "./Pages/Vehicles" 
+import VehicleDetails from "./Pages/VehicleDetails" 
+import Bookings from "./Pages/Bookings" 
+import Users from "./Pages/Users" 
+import UserDetails from "./Pages/UserDetails" 
+import Partners from "./Pages/Partners" 
+import Roles from "./Pages/Roles" 
+import VehicleTracking from "./Pages/VehicleTracking" 
+import Login from "./Pages/Login" 
 
 function App() {
   return (
@@ -36,9 +29,8 @@ function App() {
           <Route path="/UserDetails" element={Cookies.get("token") == null ? (<Navigate to="/login" />) : (<UserDetails />)} />
         </Routes>
       </Router>
-      {/* <Footer />  */}
     </div>
-  );
+  ) 
 }
 
-export default App;
+export default App 

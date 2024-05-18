@@ -1,51 +1,41 @@
-import React, { useState } from "react";
-import axios from "axios";
-import Success from "../Success";
-import Dialog from '@mui/material/Dialog';
-// import Dialog from "@material-ui/core/Dialog";
+import React, { useState } from "react"
+import axios from "axios"
+import Success from "../Success"
+import Dialog from '@mui/material/Dialog'
 
 const NewRole = () => {
-  // const [error, setError] = useState(null);
   const [data, setData] = useState({
-    staff_name: "",
-    staff_email: "",
-    staff_position: "",
-    staff_id_number: "",
-    staff_mobile: "",
-  });
-  const [spin, setSpin] = useState(false);
-  const [success, setSuccess] = useState(false);
-
+    staff_name: "", staff_email: "", staff_position: "", staff_id_number: "", staff_mobile: ""
+  })
+  const [spin, setSpin] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value,
-    });
-  };
+    const value = e.target.value
+    setData({ ...data, [e.target.name]: value })
+  }
 
   const handleSuccessClose = () => {
-    setSuccess(false);
-  };
+    setSuccess(false)
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setSpin(true);
+    e.preventDefault()
+    setSpin(true)
     const staffData = {
       staff_name: data.staff_name,
       staff_email: data.staff_email,
       staff_position: data.staff_position,
       staff_id_number: data.staff_id_number,
       staff_mobile: data.staff_mobile,
-    };
+    }
     axios
       .post("https://apigari.herokuapp.com/api/v1/newStaff", staffData)
       .then((response) => {
-        setSuccess(true);
-        setSpin(false);
-      });
-  };
+        setSuccess(true)
+        setSpin(false)
+      })
+  }
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-16">
@@ -141,6 +131,7 @@ const NewRole = () => {
         </button>
       </form>
     </div>
-  );
-};
-export default NewRole;
+  )
+}
+
+export default NewRole

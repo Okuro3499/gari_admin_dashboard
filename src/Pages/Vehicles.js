@@ -1,43 +1,43 @@
-import React, { useState, useEffect } from "react";
-import baseURL from '../utils/Config.js';
-import { BallTriangle } from "react-loader-spinner";
-import Dialog from '@mui/material/Dialog';
-import { Link } from "react-router-dom";
-import NewVehicle from "../components/Vehicle/NewVehicle";
-import SideBar from "../components/SideBar";
-import Cookies from "js-cookie";
-import Select from "react-select";
+import React, { useState, useEffect } from "react" 
+import baseURL from '../utils/Config.js' 
+import { BallTriangle } from "react-loader-spinner" 
+import Dialog from '@mui/material/Dialog' 
+import { Link } from "react-router-dom" 
+import NewVehicle from "../components/Vehicle/NewVehicle" 
+import SideBar from "../components/SideBar" 
+import Cookies from "js-cookie" 
+import Select from "react-select" 
 
 function Vehicles() {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [cars, setCars] = useState([]);
-  const [initialCars, setInitialCars] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [openAddCarDialog, setOpenAddCarDialog] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState({ value: "", label: "All" });
-  const [companies, setCompanies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const carsPerPage = 20;
+  const [error, setError] = useState(null) 
+  const [loading, setLoading] = useState(true) 
+  const [cars, setCars] = useState([]) 
+  const [initialCars, setInitialCars] = useState([]) 
+  const [searchTerm, setSearchTerm] = useState("") 
+  const [openAddCarDialog, setOpenAddCarDialog] = useState(false) 
+  const [selectedCompany, setSelectedCompany] = useState({ value: "", label: "All" }) 
+  const [companies, setCompanies] = useState([]) 
+  const [currentPage, setCurrentPage] = useState(1) 
+  const carsPerPage = 20 
 
   const handleClickOpen = () => {
-    setOpenAddCarDialog(true);
-  };
+    setOpenAddCarDialog(true) 
+  } 
 
   const handleClose = () => {
-    setOpenAddCarDialog(false);
-  };
+    setOpenAddCarDialog(false) 
+  } 
 
   const handleCloseNewVehicleDialog = () => {
-    setOpenAddCarDialog(false);
-  };
+    setOpenAddCarDialog(false) 
+  } 
 
   const handleCompanyChange = (selectedOption) => {
-    setSelectedCompany(selectedOption);
+    setSelectedCompany(selectedOption) 
 
     if (selectedOption.value === "") {
-      setCars(initialCars);
-      setLoading(false);
+      setCars(initialCars) 
+      setLoading(false) 
     } else {
       const requestOptions = {
         method: 'POST',
@@ -45,74 +45,65 @@ function Vehicles() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ company_id: selectedOption.value }),
-      };
+      } 
 
       fetch(`${baseURL}v1/cars/company`, requestOptions)
       .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setCars(data.cars);
-          console.log(data.cars)
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        }
-      );
+      .then((data) => {
+        setLoading(false) 
+        setCars(data.cars) 
+        console.log(data.cars)
+      }, (error) => {
+        setLoading(false) 
+        setError(error) 
+      }) 
     }
-  };
+  } 
 
   const companyDropdown  = [
     { value: "", label: "All" },
     ...companies.map((company) => ({
       value: company.company_id,
-      label: company.company_name,
+      label: company.company_name
     })),
-  ];
+  ] 
 
   useEffect(() => {
     const config = {
-      headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-    };
+      headers: { Authorization: `Bearer ${Cookies.get("token")}` }
+    } 
 
     fetch(`${baseURL}v1/cars`)
       .then((response) => response.json())
-      .then(
-        (data) => {
-          setLoading(false);
-          setInitialCars(data.cars);
-          setCars(data.cars);
-          console.log(data.cars)
-        },
-        (error) => {
-          setLoading(false);
-          setError(error);
-        }
-      );
+      .then((data) => {
+        setLoading(false) 
+        setInitialCars(data.cars) 
+        setCars(data.cars) 
+        console.log(data.cars)
+      }, (error) => { 
+        setLoading(false) 
+        setError(error) 
+      }) 
 
       fetch(`${baseURL}v1/companies`, config)
       .then((response) => response.json())
-      .then(
-        (data) => {
-          setCompanies(data.companies);
-        },
-        (error) => {
-          console.error("Error fetching companies:", error);
-        }
-      );
-  }, []);
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else {
-    const indexOfLastCar = currentPage * carsPerPage;
-    const indexOfFirstCar = indexOfLastCar - carsPerPage;
-    const totalPages = Math.ceil(cars.length / carsPerPage);
-    const hasNextPage = currentPage < totalPages;
-    const hasPreviousPage = currentPage > 1;
-
-    return (
+      .then((data) => {
+        setCompanies(data.companies)
+      }, (error) => {
+        console.error("Error fetching companies:", error) 
+      })
+    }, []) 
+    
+    if (error) {
+      return <div>Error: {error.message}</div> 
+    } else {
+      const indexOfLastCar = currentPage * carsPerPage 
+      const indexOfFirstCar = indexOfLastCar - carsPerPage 
+      const totalPages = Math.ceil(cars.length / carsPerPage) 
+      const hasNextPage = currentPage < totalPages 
+      const hasPreviousPage = currentPage > 1 
+      
+      return (
       <div>
         <SideBar />
         <div className="flex overflow-hidden bg-white pt-16">
@@ -185,11 +176,11 @@ function Vehicles() {
                 <section className="flex flex-row flex-wrap mx-auto">
                   {cars.filter((car) => {
                     if (searchTerm === "") {
-                      return car;
+                      return car 
                     } else if (car.car_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                      return car;
+                      return car 
                     } else if (car.transmission.toLowerCase().includes(searchTerm.toLowerCase())) {
-                      return car;
+                      return car 
                     }
                   }).map((car) => (
                   <div className="transition-all duration-150 flex w-full px-4 py-6 md:w-1/2 lg:w-1/3" key={car.car_id}>
@@ -237,8 +228,8 @@ function Vehicles() {
           )}
         </div>
       </div>
-    );
+    ) 
   }
 }
 
-export default Vehicles;
+export default Vehicles 

@@ -1,22 +1,22 @@
-import React, { useRef, useState, useEffect } from "react";
-import Cookies from "js-cookie";
+import React, { useRef, useState, useEffect } from "react"
+import Cookies from "js-cookie"
 
 const SideBar = () => {
-  const ref = useRef();
-  const [isLoggedIn, setisLoggedIn] = useState(null);
-  const [navOpen, setNavOpen] = useState(false);
+  const ref = useRef()
+  const [isLoggedIn, setisLoggedIn] = useState(null)
+  const [navOpen, setNavOpen] = useState(false)
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
       if (navOpen && ref.current && !ref.current.contains(e.target)) {
-        setNavOpen(false);
+        setNavOpen(false)
       }
-    };
-    document.addEventListener("mousedown", checkIfClickedOutside);
+    }
+    document.addEventListener("mousedown", checkIfClickedOutside)
     return () => {
-      document.removeEventListener("mousedown", checkIfClickedOutside);
-    };
-  }, [navOpen]);
+      document.removeEventListener("mousedown", checkIfClickedOutside)
+    }
+  }, [navOpen])
 
   return (
     <div>
@@ -140,6 +140,6 @@ const SideBar = () => {
         </div>
       </aside>
     </div>
-  );
-};
-export default SideBar;
+  )
+}
+export default SideBar

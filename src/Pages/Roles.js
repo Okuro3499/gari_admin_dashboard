@@ -1,76 +1,76 @@
-import React, { useState, useEffect } from "react";
-import baseURL from '../utils/Config.js';
-import Dialog from '@mui/material/Dialog';
-import { BallTriangle } from "react-loader-spinner";
-import EditRole from "../components/Roles/EditRole.js";
-import NewRole from "../components/Roles/NewRole.js";
-import SideBar from "../components/SideBar.js";
-import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from "react" 
+import baseURL from '../utils/Config.js' 
+import Dialog from '@mui/material/Dialog' 
+import { BallTriangle } from "react-loader-spinner" 
+import EditRole from "../components/Roles/EditRole.js" 
+import NewRole from "../components/Roles/NewRole.js" 
+import SideBar from "../components/SideBar.js" 
+import { Link } from "react-router-dom" 
+import Cookies from "js-cookie" 
 
 function Roles() {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [roles, setRoles] = useState([]);
-  const [openAddRoleDialog, setOpenAddRoleDialog] = useState(false);
-  const [editable, setEditable] = useState(false);
-  const [roleId, setRoleId] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const rolesPerPage = 20;
+  const [error, setError] = useState(null) 
+  const [loading, setLoading] = useState(true) 
+  const [roles, setRoles] = useState([]) 
+  const [openAddRoleDialog, setOpenAddRoleDialog] = useState(false) 
+  const [editable, setEditable] = useState(false) 
+  const [roleId, setRoleId] = useState("") 
+  const [searchTerm, setSearchTerm] = useState("") 
+  const [currentPage, setCurrentPage] = useState(1) 
+  const rolesPerPage = 20 
 
   const getStatusColorClass = (status) => {
     if (!status) {
-      return "bg-gray-400";
+      return "bg-gray-400" 
     }
     switch (status.toLowerCase()) {
       case "awaiting approval":
-        return "bg-yellow-300";
+        return "bg-yellow-300" 
       case "active":
-        return "bg-green-400";
+        return "bg-green-400" 
       case "inactive":
-        return "bg-red-600";
+        return "bg-red-600" 
       default:
-        return "bg-gray-400";
+        return "bg-gray-400" 
     }
-  };
+  } 
 
   const handleClickOpen = () => {
-    setOpenAddRoleDialog(true);
-  };
+    setOpenAddRoleDialog(true) 
+  } 
 
   const handleClose = () => {
-    setOpenAddRoleDialog(false);
-  };
+    setOpenAddRoleDialog(false) 
+  } 
 
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-    };
+    } 
 
     fetch(`${baseURL}v1/roles`, config)
       .then((response) => response.json())
       .then(
         (data) => {
-          console.log(data);
-          setLoading(false);
-          setRoles(data.roles);
+          console.log(data) 
+          setLoading(false) 
+          setRoles(data.roles) 
         },
         (error) => {
-          setLoading(false);
-          console.error("Error fetching roles:", error);
+          setLoading(false) 
+          console.error("Error fetching roles:", error) 
         }
-      );
-  }, []);
+      ) 
+  }, []) 
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error.message}</div> 
   } else {
-    const indexOfLastRole = currentPage * rolesPerPage;
-    const indexOfFirstRole = indexOfLastRole - rolesPerPage;
-    const totalPages = Math.ceil(roles.length / rolesPerPage);
-    const hasNextPage = currentPage < totalPages;
-    const hasPreviousPage = currentPage > 1;
+    const indexOfLastRole = currentPage * rolesPerPage 
+    const indexOfFirstRole = indexOfLastRole - rolesPerPage 
+    const totalPages = Math.ceil(roles.length / rolesPerPage) 
+    const hasNextPage = currentPage < totalPages 
+    const hasPreviousPage = currentPage > 1 
     return (
       <div>
         <SideBar />
@@ -126,7 +126,7 @@ function Roles() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-3 ml-auto">
-                      <button className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto" type="button" onClick={() => {handleClickOpen(); setEditable(false);}}>
+                      <button className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto" type="button" onClick={() => {handleClickOpen(); setEditable(false) }}>
                         <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
                         </svg>
@@ -181,21 +181,21 @@ function Roles() {
                         <tbody className="bg-white divide-y divide-gray-200">
                           {roles.filter((role) => {
                             if (searchTerm === "") {
-                              return role;
+                              return role 
                             } else if (role.role_name.toLowerCase().includes(searchTerm.toLowerCase())){
                               return role
                             }}).map((role) => {
                               // Convert date from
                               let createdDate = new Date(role.created_date).toLocaleString("en-GB", 
-                              {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour24: true});
+                              {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour24: true}) 
 
                               // Convert date to
-                              let modifiedDate;
+                              let modifiedDate 
                               if (role.modified_date) {
                                 modifiedDate = new Date(role.modified_date).toLocaleString("en-GB", 
-                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false});
+                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false}) 
                               } else {
-                                modifiedDate = "never";
+                                modifiedDate = "never" 
                               }
                               return (
                             <tr className="hover:bg-gray-100" key={role.role_id}>
@@ -230,7 +230,7 @@ function Roles() {
                                   </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
-                                <button type="button" onClick={() => {handleClickOpen(role.role_id); setEditable(true); setRoleId(role.role_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <button type="button" onClick={() => {handleClickOpen(role.role_id); setEditable(true); setRoleId(role.role_id) }} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                                     <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>
@@ -249,7 +249,7 @@ function Roles() {
                                 </Link>
                               </td>
                             </tr>
-                            );
+                            ) 
                           })}
                         </tbody>
                       </table>
@@ -284,8 +284,8 @@ function Roles() {
         )}
         </div>
       </div>
-    );
+    ) 
   }
 }
 
-export default Roles;
+export default Roles 
