@@ -197,17 +197,6 @@ function Bookings() {
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
                             {bookings.filter((booking) => {
-                              // if (searchTerm === "") {
-                              //   return booking;
-                              // } else if (booking.first_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                              //   return booking;
-                              // } else if (booking.last_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                              //   return booking;
-                              // } else if (booking.phone_number.toLowerCase().includes(searchTerm.toLowerCase())) {
-                              //   return booking;
-                              // } else if (booking.car_name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                              //   return booking;
-                              // }
                               const searchTermLower = searchTerm.toLowerCase();
                               const phoneNumberString = booking.phone_number.toString();
                               if (
@@ -218,23 +207,20 @@ function Bookings() {
                                 return true;
                               }
                               return false;
-                            })
-                            .filter(booking => {
-                              // Filter based on selected status
+                            }).filter(booking => {
                               if (selectedStatus.value === "") {
-                                return true; // Show all bookings when no status is selected
+                                return true;
                               } else {
                                 return booking.status === selectedStatus.value;
                               }
-                            })
-                            .map((booking) => {
+                            }).map((booking) => {
                                 // Convert date from
                                 let dateFrom = new Date(booking.book_date_from).toLocaleString("en-GB", 
-                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true});
+                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour24: true});
 
                                 // Convert date to
                                 let dateTo = new Date(booking.book_date_to).toLocaleString("en-GB", 
-                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true});
+                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour24: true});
 
                                 return (
                                   <tr className="hover:bg-gray-100" key={booking.booking_id}>

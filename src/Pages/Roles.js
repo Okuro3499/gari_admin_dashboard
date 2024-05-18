@@ -6,7 +6,6 @@ import EditRole from "../components/Roles/EditRole.js";
 import NewRole from "../components/Roles/NewRole.js";
 import SideBar from "../components/SideBar.js";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Cookies from "js-cookie";
 
 function Roles() {
@@ -17,6 +16,24 @@ function Roles() {
   const [editable, setEditable] = useState(false);
   const [roleId, setRoleId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const rolesPerPage = 20;
+
+  const getStatusColorClass = (status) => {
+    if (!status) {
+      return "bg-gray-400";
+    }
+    switch (status.toLowerCase()) {
+      case "awaiting approval":
+        return "bg-yellow-300";
+      case "active":
+        return "bg-green-400";
+      case "inactive":
+        return "bg-red-600";
+      default:
+        return "bg-gray-400";
+    }
+  };
 
   const handleClickOpen = () => {
     setOpenAddRoleDialog(true);
@@ -49,6 +66,11 @@ function Roles() {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else {
+    const indexOfLastRole = currentPage * rolesPerPage;
+    const indexOfFirstRole = indexOfLastRole - rolesPerPage;
+    const totalPages = Math.ceil(roles.length / rolesPerPage);
+    const hasNextPage = currentPage < totalPages;
+    const hasPreviousPage = currentPage > 1;
     return (
       <div>
         <SideBar />
@@ -143,10 +165,10 @@ function Roles() {
                               Name
                             </th>
                             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                              Position
+                              Created
                             </th>
                             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                              Phone Number
+                              Modified
                             </th>
                             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                               Status
@@ -158,11 +180,24 @@ function Roles() {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                           {roles.filter((role) => {
-                              if (searchTerm === "") {
-                                return role;
-                              } else if (role.role_name.toLowerCase().includes(searchTerm.toLowerCase())){
-                                return role
-                              }}).map((role) => (
+                            if (searchTerm === "") {
+                              return role;
+                            } else if (role.role_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                              return role
+                            }}).map((role) => {
+                              // Convert date from
+                              let createdDate = new Date(role.created_date).toLocaleString("en-GB", 
+                              {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour24: true});
+
+                              // Convert date to
+                              let modifiedDate;
+                              if (role.modified_date) {
+                                modifiedDate = new Date(role.modified_date).toLocaleString("en-GB", 
+                                {day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false});
+                              } else {
+                                modifiedDate = "never";
+                              }
+                              return (
                             <tr className="hover:bg-gray-100" key={role.role_id}>
                               <td className="p-4 w-4">
                                 <div className="flex items-center">
@@ -173,27 +208,26 @@ function Roles() {
                                 </div>
                               </td>
                               <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
-                                {/* <img className="h-10 w-10 rounded-full" src={role.user_photo_url || require('../profileIcon.jpg')} alt={role.first_name}/> */}
                                 <div className="text-sm font-normal text-gray-500">
                                   <div className="text-base font-semibold text-gray-900">
                                   {role.role_name}
                                   </div>
                                   <div className="text-sm font-normal text-gray-500">
-                                    {/* {role.role_email} */}
+                                    {role.company_name}
                                   </div>
                                 </div>
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {/* {role.role_position} */}
+                                {createdDate}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                {/* {"+254" + role.role_mobile} */}
+                                {modifiedDate}
                               </td>
                               <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
                                 <div className="flex items-center">
-                                  <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>{" "}
-                                  Active
-                                </div>
+                                  <div className={`h-2.5 w-2.5 rounded-full ${getStatusColorClass(role.status)} mr-2`} />
+                                    {role.status}
+                                  </div>
                               </td>
                               <td className="p-4 whitespace-nowrap space-x-2">
                                 <button type="button" onClick={() => {handleClickOpen(role.role_id); setEditable(true); setRoleId(role.role_id);}} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
@@ -215,7 +249,8 @@ function Roles() {
                                 </Link>
                               </td>
                             </tr>
-                          ))}
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -223,38 +258,27 @@ function Roles() {
                 </div>
               </div>
               <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
-                <div className="flex items-center mb-4 sm:mb-0">
-                  <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
-                    <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>                    
-                    </svg>
-                  </a>
-                  <a href="/" className="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2">
-                    <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </a>
-                  <span className="text-sm font-normal text-gray-500">
-                    Showing{" "}
-                    <span className="text-gray-900 font-semibold">1-20</span> of{" "}
-                    <span className="text-gray-900 font-semibold">2290</span>
-                  </span>
+                  <div className="flex items-center mb-4 sm:mb-0">
+                    <span className="text-sm font-normal text-gray-500">
+                      Showing{" "}
+                      <span className="text-gray-900 font-semibold">{indexOfFirstRole + 1} - {indexOfLastRole > roles.length ? roles.length : indexOfLastRole}</span>{" "}
+                      of{" "}
+                      <span className="text-gray-900 font-semibold">{roles.length}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    {hasPreviousPage && (
+                    <button onClick={() => setCurrentPage(currentPage - 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                      Previous
+                    </button>
+                    )}
+                    {hasNextPage && (
+                    <button onClick={() => setCurrentPage(currentPage + 1)} className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                      Next
+                    </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                    <svg className="-ml-1 mr-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"/>
-                    </svg>
-                    Previous
-                  </a>
-                  <a href="/" className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                    Next
-                    <svg className="-mr-1 ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
             </main>
           </div>
         )}
