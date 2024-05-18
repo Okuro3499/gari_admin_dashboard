@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import baseURL from '../utils/Config.js';
 import { BallTriangle } from "react-loader-spinner";
+import Dialog from '@mui/material/Dialog';
 import SideBar from "../components/SideBar";
 import { Link } from "react-router-dom";
+import NewUser from "../components/Users/AddUser.js";
 import Cookies from "js-cookie";
 import Select from "react-select";
 
@@ -12,6 +14,7 @@ function Users() {
   const [userClients, setUserClients] = useState([]);
   const [initialUsers, setInitialUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [openNewUserDialog, setOpenNewUserDialog] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRole, setSelectedRole] = useState({ value: "", label: "All" });
   const [roles, setRoles] = useState([]);
@@ -29,6 +32,18 @@ function Users() {
       default:
         return "bg-gray-400";
     }
+  };
+
+  const handleClickOpen = () => {
+    setOpenNewUserDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenNewUserDialog(false);
+  };
+
+  const handleCloseNewUserDialog = () => {
+    setOpenNewUserDialog(false);
   };
 
   const handleRoleChange = (selectedOption) => {
@@ -77,8 +92,8 @@ function Users() {
   
   useEffect(() => {
     const config = {
-      headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-    };
+      headers: { Authorization: `Bearer ${Cookies.get("token")}` }
+    }
 
     fetch(`${baseURL}v1/users`, config)
       .then(response => {
@@ -86,14 +101,12 @@ function Users() {
           throw new Error('Network response was not ok');
         }
         return response.json();
-      })
-      .then(data => {
+      }).then(data => {
         console.log(data);
         setLoading(false);
         setInitialUsers(data.users);
         setUserClients(data.users);
-      })
-      .catch(error => {
+      }).catch(error => {
         console.error('Fetch error:', error);
         setLoading(false);
         setError(error);
@@ -101,16 +114,14 @@ function Users() {
   
     fetch(`${baseURL}v1/roles`, config)
       .then((response) => response.json())
-      .then(
-        (data) => {
+      .then((data) => {
           console.log(data)
           setRoles(data.roles);
-        },
-        (error) => {
+        }, (error) => {
           console.error("Error fetching roles:", error);
         }
-      );
-  }, []);
+      )
+  }, [])
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -181,7 +192,7 @@ function Users() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 sm:space-x-3 ml-auto">
-                        <button type="button" data-modal-toggle="add-user-modal" className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"> 
+                        <button type="button" onClick={handleClickOpen} data-modal-toggle="add-user-modal" className="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto"> 
                         <svg className="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
                         </svg>
@@ -190,6 +201,10 @@ function Users() {
                         <div className="w-1/2 focus:ring-4 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 sm:w-auto">
                           <Select placeholder="Select role" value={selectedRole} options={rolesDropdown} onChange={handleRoleChange}/>
                         </div>
+
+                        <Dialog open={openNewUserDialog} onClose={handleClose}>
+                          <NewUser onSuccess={handleCloseNewUserDialog} />
+                        </Dialog>
                       </div>
                     </div>
                   </div>
