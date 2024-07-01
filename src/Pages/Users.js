@@ -95,8 +95,7 @@ function Users() {
       headers: { Authorization: `Bearer ${Cookies.get("token")}` }
     }
 
-    fetch(`${baseURL}v1/users`, config)
-      .then(response => {
+    fetch(`${baseURL}v1/users`, config).then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok') 
         }
@@ -112,8 +111,7 @@ function Users() {
         setError(error) 
       }) 
   
-    fetch(`${baseURL}v1/roles`, config)
-      .then((response) => response.json())
+    fetch(`${baseURL}v1/roles`, config).then((response) => response.json())
       .then((data) => {
           console.log(data)
           setRoles(data.roles) 

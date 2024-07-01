@@ -37,43 +37,33 @@ const NewVehicle = ({ onSuccess }) => {
   const [showToast, setShowToast] = useState(false)
 
   const statusDropdown = [{
-    value: "Available",
-    label: "Available"
+    value: "Available", label: "Available"
   }, {
-    value: "Booked",
-    label: "Booked"
+    value: "Booked", label: "Booked"
   }]
 
   const transmissionDropdown = [{
-      value: "Automatic",
-      label: "Automatic",
+      value: "Automatic", label: "Automatic",
     },
     {
-      value: "Manual",
-      label: "Manual",
+      value: "Manual",label: "Manual",
     },
   ]
 
   const driveDropdown = [{
-    value: "Self Drive",
-    label: "Self Drive"
+    value: "Self Drive", label: "Self Drive"
   }, {
-    value: "Chauffered",
-    label: "Chauffered"
+    value: "Chauffered", label: "Chauffered"
   }, {
-    value: "Self Drive & Chauffered",
-    label: "Self Drive & Chauffered"
+    value: "Self Drive & Chauffered", label: "Self Drive & Chauffered"
   }]
 
   const fuelDropdown = [{
-    value: "Electric",
-    label: "Electric"
+    value: "Electric", label: "Electric"
   }, {
-    value: "Petrol",
-    label: "Petrol"
+    value: "Petrol", label: "Petrol"
   }, {
-    value: "Diesel",
-    label: "Diesel"
+    value: "Diesel", label: "Diesel"
   }]
 
   const handleSuccessClose = () => {
@@ -177,7 +167,6 @@ const NewVehicle = ({ onSuccess }) => {
     setImages(updatedImages)
     setNumFiles(updatedPreviews.length)
   }
-  
 
   const handleTagRemove = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove))
